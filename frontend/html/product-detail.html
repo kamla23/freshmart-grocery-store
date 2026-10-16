@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organic Spinach - FreshMart</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/product-detail.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Unified Header Navigation -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="../images/logo.jpeg" alt="FreshMart Logo" class="logo-img" />
+        Fresh<span class="logo-highlight">Mart</span>
+      </a>
+    </div>
+
+    <!-- Location / Pincode Picker -->
+    <div class="location-picker-box">
+      <i class="fa-solid fa-location-dot location-icon"></i>
+      <div class="location-info">
+        <span class="location-label">Deliver to</span>
+        <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()">
+          <span id="currentPincode">Select Pincode</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search fresh vegetables, fruits, milk..." />
+      <button type="button" id="searchBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox" />
+    <label for="menu-toggle" class="hamburger-btn">
+      <i class="fa-solid fa-bars"></i>
+    </label>
+
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="products.html" class="nav-item active">Groceries</a>
+      <a href="cart.html" class="cart-btn" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+      <a href="login.html" id="userAuthBtn" class="user-link">
+        <i class="fa-regular fa-user"></i>
+        <span>Login</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Pincode Modal Popup -->
+  <div class="pincode-modal" id="pincodeModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closePincodeModal()">&times;</span>
+      <h3>Enter Delivery Pincode</h3>
+      <p>Check product availability and delivery time</p>
+      <div class="pincode-input-group">
+        <input type="text" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit Pincode" />
+        <button type="button" onclick="savePincode()">Apply</button>
+      </div>
+      <span class="pincode-msg" id="pincodeMsg"></span>
+    </div>
+  </div>
+
+  <!-- Main Product Detail Layout -->
+  <main class="detail-container">
+    <div class="product-detail-card">
+      
+      <!-- 1. Product Image Gallery -->
+      <section class="gallery-section">
+        <div class="main-img-box">
+          <img id="mainProductImg" src="../images/vagetables.jpeg" alt="Organic Spinach">
+        </div>
+        <div class="thumbnail-list">
+          <img src="../images/vagetables.jpeg" class="thumb active" onclick="changeImage(this.src, this)" alt="Thumb 1">
+          <img src="../images/vagetables.jpeg" class="thumb" onclick="changeImage(this.src, this)" alt="Thumb 2">
+          <img src="../images/vagetables.jpeg" class="thumb" onclick="changeImage(this.src, this)" alt="Thumb 3">
+        </div>
+      </section>
+
+      <!-- 2. Product Information & Variant Selector -->
+      <section class="info-section">
+        <span class="product-cat">Vegetables</span>
+        <h1 class="product-title">Organic Fresh Spinach</h1>
+
+        <!-- Rating & Reviews Count -->
+        <div class="rating-badge">
+          <span class="stars"><i class="fa-solid fa-star"></i> 4.5</span>
+          <span class="review-count">(124 Customer Reviews)</span>
+        </div>
+
+        <div class="price-box">
+          <span class="current-price" id="displayPrice">₹30</span>
+          <span class="stock-status in-stock" id="stockStatus"><i class="fa-solid fa-circle-check"></i> In Stock</span>
+        </div>
+
+        <!-- Unit Variant Picker -->
+        <div class="variant-picker">
+          <h4>Select Pack Size:</h4>
+          <div class="variant-options">
+            <label class="variant-card active">
+              <input type="radio" name="variant" value="250g" data-price="30" checked onchange="updateVariant(this)">
+              <span>250g</span>
+              <small>₹30</small>
+            </label>
+            <label class="variant-card">
+              <input type="radio" name="variant" value="500g" data-price="55" onchange="updateVariant(this)">
+              <span>500g</span>
+              <small>₹55</small>
+            </label>
+            <label class="variant-card">
+              <input type="radio" name="variant" value="1kg" data-price="100" onchange="updateVariant(this)">
+              <span>1kg</span>
+              <small>₹100</small>
+            </label>
+          </div>
+        </div>
+
+        <!-- Add to Cart Action -->
+        <div class="action-box">
+          <button type="button" class="btn-add-detail" onclick="addDetailToCart(201)">
+            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+          </button>
+        </div>
+
+        <!-- Metadata Info -->
+        <div class="metadata-box">
+          <div class="meta-item">
+            <i class="fa-solid fa-hourglass-half"></i>
+            <div>
+              <strong>Shelf Life</strong>
+              <p>Best within 3 days of delivery</p>
+            </div>
+          </div>
+          <div class="meta-item">
+            <i class="fa-solid fa-snowflake"></i>
+            <div>
+              <strong>Storage Advice</strong>
+              <p>Keep refrigerated at 4°C - 8°C</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 3. Customer Reviews Section -->
+    <section class="reviews-container">
+      <h2>Customer Reviews & Ratings</h2>
+
+      <div class="reviews-summary">
+        <div class="score-box">
+          <h3>4.5</h3>
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+          <p>Based on 124 ratings</p>
+        </div>
+      </div>
+
+      <!-- Individual Comment List -->
+      <div class="comments-list">
+        <div class="comment-card">
+          <div class="user-info">
+            <strong>Rahul Sharma</strong>
+            <span class="user-rating"><i class="fa-solid fa-star"></i> 5</span>
+          </div>
+          <p class="comment-text">Very fresh spinach! Quality is super crisp and neatly packed.</p>
+          <span class="comment-date">2 days ago</span>
+        </div>
+
+        <div class="comment-card">
+          <div class="user-info">
+            <strong>Priya Patel</strong>
+            <span class="user-rating"><i class="fa-solid fa-star"></i> 4</span>
+          </div>
+          <p class="comment-text">Good product, leaf size was fresh and clean. Delivery was fast.</p>
+          <span class="comment-date">1 week ago</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Storewide Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <img src="../images/logo.jpeg" alt="FreshMart Logo" />
+          Fresh<span>Mart</span>
+        </a>
+        <p class="footer-desc">
+          FreshMart is your trusted neighborhood online grocery store delivering fresh farm vegetables, crisp fruits, organic dairy, and pantry staples in under 2 hours.
+        </p>
+        <div class="footer-social-links">
+          <a href="javascript:void(0)" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Top Categories</h4>
+        <ul class="footer-links-list">
+          <li><a href="products.html?cat=vegetables"><i class="fa-solid fa-chevron-right"></i> Fresh Vegetables</a></li>
+          <li><a href="products.html?cat=fruits"><i class="fa-solid fa-chevron-right"></i> Juicy Fruits</a></li>
+          <li><a href="products.html?cat=dairy"><i class="fa-solid fa-chevron-right"></i> Farm Dairy & Milk</a></li>
+          <li><a href="products.html?cat=bakery"><i class="fa-solid fa-chevron-right"></i> Bakery & Breads</a></li>
+          <li><a href="products.html?cat=organic"><i class="fa-solid fa-chevron-right"></i> Organic Staples</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Care</h4>
+        <ul class="footer-links-list">
+          <li><a href="profile.html"><i class="fa-solid fa-chevron-right"></i> My Account & Orders</a></li>
+          <li><a href="cart.html"><i class="fa-solid fa-chevron-right"></i> View Cart & Checkout</a></li>
+          <li><a href="javascript:void(0)" onclick="openPincodeModal()"><i class="fa-solid fa-chevron-right"></i> Delivery Areas & Pincode</a></li>
+          <li><a href="products.html"><i class="fa-solid fa-chevron-right"></i> Special Offers & Deals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <strong>1800-FRESHMART (Toll-Free)</strong>
+            <span>7:00 AM - 10:00 PM (All 7 Days)</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <strong>support@freshmart.in</strong>
+            <span>Quick response within 1 hour</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>FreshMart Superstores Ltd.</strong>
+            <span>Bengaluru, Karnataka, India</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div>
+          &copy; 2026 FreshMart Grocery Store. All Rights Reserved. Delivered Fresh & Fast.
+        </div>
+        <div class="payment-badges-row">
+          <span>100% Safe Payments:</span>
+          <i class="fa-brands fa-google-pay" title="UPI GPay"></i>
+          <i class="fa-brands fa-cc-visa" title="Visa"></i>
+          <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+          <i class="fa-solid fa-money-bill-wave" title="Cash on Delivery"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/product-detail.js"></script>
+</body>
+</html>

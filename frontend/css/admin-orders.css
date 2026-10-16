@@ -1,0 +1,298 @@
+/* ================= ADMIN ORDER FULFILLMENT CENTER STYLING ================= */
+
+/* Status Filter Tabs */
+.fulfillment-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.status-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: #ffffff;
+  border: 1.5px solid var(--admin-border, #e5e7eb);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4b5563;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.status-tab-btn:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.status-tab-btn.active {
+  background-color: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.tab-count {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.status-tab-btn.active .tab-count {
+  background-color: #ffffff;
+  color: #065f46;
+}
+
+/* Fulfillment Toolbar */
+.orders-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.toolbar-search-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  max-width: 600px;
+  flex-wrap: wrap;
+}
+
+/* Status Badges & Select */
+.fulfillment-status-select {
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.fulfillment-status-select.pending,
+.fulfillment-status-select.processing {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.fulfillment-status-select.packing {
+  background-color: #f5f3ff;
+  color: #5b21b6;
+  border-color: #ddd6fe;
+}
+
+.fulfillment-status-select.out-for-delivery {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border-color: #bae6fd;
+}
+
+.fulfillment-status-select.completed,
+.fulfillment-status-select.delivered {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+.fulfillment-status-select.cancelled {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+/* Items Preview Cell */
+.table-items-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.items-mini-thumb {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: #fff;
+}
+
+/* Substitution Pill */
+.sub-rule-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 3px;
+}
+
+.sub-rule-pill.replace {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.sub-rule-pill.refund {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+/* Action Buttons */
+.order-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-slip {
+  padding: 6px 12px;
+  background-color: #ffffff;
+  border: 1.5px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.btn-slip:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* ================= PACKING SLIP MODAL ================= */
+.packing-slip-card {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.25);
+  padding: 28px;
+}
+
+.slip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 2px dashed #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.slip-title h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.slip-title p {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 2px 0 0 0;
+}
+
+.slip-meta-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.slip-slot-highlight {
+  grid-column: 1 / -1;
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #065f46;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slip-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.slip-table th {
+  background-color: #f9fafb;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4b5563;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid #e5e7eb;
+  text-align: left;
+}
+
+.slip-table td {
+  padding: 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.slip-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #10b981;
+  cursor: pointer;
+}
+
+.slip-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .packing-slip-card, .packing-slip-card * {
+    visibility: visible;
+  }
+  .packing-slip-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none;
+    padding: 0;
+  }
+  .slip-actions, .admin-modal-close {
+    display: none !important;
+  }
+}

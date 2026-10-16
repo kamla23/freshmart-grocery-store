@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Inventory Manager - FreshMart Admin</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-products.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Admin Topbar Navigation -->
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="admin-brand">
+      <img src="../images/logo.jpeg" alt="FreshMart Logo" class="admin-logo-img" />
+      <div class="admin-brand-title">Fresh<span>Mart</span></div>
+      <span class="admin-badge">Admin Portal</span>
+    </a>
+
+    <div class="admin-top-right">
+      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront">
+        <i class="fa-solid fa-store"></i> <span>View Store</span>
+      </a>
+
+      <div class="admin-user-pill">
+        <div class="admin-avatar">K</div>
+        <div class="admin-user-info">
+          <span class="admin-user-name">Kamla</span>
+          <span class="admin-user-role">Super Admin</span>
+        </div>
+      </div>
+
+      <a href="admin-login.html" class="btn-view-store" title="Log Out" onclick="handleAdminLogout(event)">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Admin Main Layout -->
+  <div class="admin-layout">
+    
+    <!-- Admin Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <a href="admin-dashboard.html" class="admin-nav-item">
+        <i class="fa-solid fa-chart-pie"></i> <span>Overview</span>
+      </a>
+      <a href="admin-orders.html" class="admin-nav-item">
+        <i class="fa-solid fa-boxes-packing"></i> <span>Orders</span>
+      </a>
+      <a href="admin-products.html" class="admin-nav-item active">
+        <i class="fa-solid fa-warehouse"></i> <span>Inventory</span>
+      </a>
+      <button type="button" class="admin-nav-item" onclick="alert('Customers list: 42 active registered users.')">
+        <i class="fa-solid fa-users"></i> <span>Customers</span>
+      </button>
+      <div class="admin-sidebar-divider"></div>
+      <a href="index.html" class="admin-nav-item">
+        <i class="fa-solid fa-arrow-left"></i> <span>Exit to Store</span>
+      </a>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      
+      <div class="dashboard-header">
+        <div>
+          <h1>Product Inventory Manager</h1>
+          <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+            Total Managed Products: <strong id="totalProductCount" style="color: #111827;">0</strong>
+          </p>
+        </div>
+        <button type="button" class="btn-add-product" onclick="openAddProductModal()">
+          <i class="fa-solid fa-plus"></i> Add New Product
+        </button>
+      </div>
+
+      <!-- Action Toolbar (Search & Filter) -->
+      <section class="products-toolbar">
+        <div class="toolbar-left">
+          
+          <div class="admin-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="adminSearchInput" placeholder="Search by product title or keyword..." oninput="handleFilterProducts()" />
+          </div>
+
+          <select class="toolbar-select" id="catFilterSelect" onchange="handleFilterProducts()">
+            <option value="ALL">All Categories</option>
+            <option value="Vegetables">Vegetables</option>
+            <option value="Fruits">Fruits</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Organic">Organic Essentials</option>
+          </select>
+
+          <select class="toolbar-select" id="stockFilterSelect" onchange="handleFilterProducts()">
+            <option value="ALL">All Stock Statuses</option>
+            <option value="IN_STOCK">In Stock (&gt; 5)</option>
+            <option value="LOW_STOCK">Low Stock (1 - 5)</option>
+            <option value="OUT_OF_STOCK">Out of Stock (0)</option>
+          </select>
+
+        </div>
+      </section>
+
+      <!-- Products Management Table -->
+      <section class="orders-table-card">
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Thumbnail</th>
+                <th>Product Title</th>
+                <th>Category</th>
+                <th>Price / Unit</th>
+                <th>Stock Count</th>
+                <th>Status</th>
+                <th>Quick Restock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <!-- Dynamically populated via admin-products.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="noInventoryMsg" class="hidden" style="text-align: center; padding: 40px 20px; color: #6b7280;">
+          <i class="fa-solid fa-box-open" style="font-size: 36px; margin-bottom: 10px; color: #d1d5db;"></i>
+          <p>No products match your search or filter criteria.</p>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ================= ADD / EDIT PRODUCT MODAL ================= -->
+  <div class="admin-modal-overlay" id="productModal">
+    <div class="product-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="productModalTitle">Add New Grocery Product</h3>
+        <button type="button" class="admin-modal-close" onclick="closeProductModal()">&times;</button>
+      </div>
+
+      <form id="productForm" onsubmit="handleSaveProduct(event)">
+        <input type="hidden" id="editProductId" value="" />
+
+        <!-- 1. Image Upload Section (Multer-Ready) -->
+        <div class="image-upload-wrapper">
+          <div class="image-preview-box">
+            <img id="imagePreview" src="../images/vagetables.jpeg" alt="Product Preview" />
+          </div>
+          <div class="upload-controls">
+            <label><i class="fa-solid fa-cloud-arrow-up" style="color: #10b981;"></i> Product Image</label>
+            <input type="file" id="productImageFile" accept="image/*" onchange="handleImageFileUpload(event)" style="font-size: 12px;" />
+            <small>Upload file (Multer compatible) or pick a preset image below:</small>
+            
+            <div class="preset-images-picker">
+              <img src="../images/vagetables.jpeg" class="preset-thumb active" onclick="selectPresetImage(this)" title="Spinach / Veg" alt="Preset 1">
+              <img src="../images/fruits2.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Red Apples" alt="Preset 2">
+              <img src="../images/pure1.jpg" class="preset-thumb" onclick="selectPresetImage(this)" title="Organic Milk" alt="Preset 3">
+              <img src="../images/bread.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Wheat Bread" alt="Preset 4">
+              <img src="../images/oil.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Honey / Oil" alt="Preset 5">
+              <img src="../images/fruit1.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Oranges" alt="Preset 6">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Product Details Grid -->
+        <div class="product-form-grid">
+          
+          <div class="product-form-group full-width">
+            <label for="prodTitle">Product Title <span style="color: #ef4444;">*</span></label>
+            <input type="text" id="prodTitle" placeholder="e.g. Farm Fresh Organic Broccoli" required />
+          </div>
+
+          <div class="product-form-group">
+            <label for="prodCategory">Category <span style="color: #ef4444;">*</span></label>
+            <select id="prodCategory" required>
+              <option value="Vegetables">Vegetables</option>
+              <option value="Fruits">Fruits</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Organic">Organic Essentials</option>
+            </select>
+          </div>
+
+          <div class="product-form-group">
+            <label for="prodUnit">Unit Measure <span style="color: #ef4444;">*</span></label>
+            <input type="text" id="prodUnit" placeholder="e.g. 500g, 1kg, 1L, pack" value="500g" required />
+          </div>
+
+          <div class="product-form-group">
+            <label for="prodPrice">Price per Unit (₹) <span style="color: #ef4444;">*</span></label>
+            <input type="number" id="prodPrice" min="1" step="0.5" placeholder="e.g. 45" required />
+          </div>
+
+          <div class="product-form-group">
+            <label for="prodStock">Initial / Current Stock <span style="color: #ef4444;">*</span></label>
+            <input type="number" id="prodStock" min="0" placeholder="e.g. 25" value="20" required />
+          </div>
+
+          <div class="product-form-group full-width">
+            <label for="prodThreshold">Low-Stock Alert Threshold</label>
+            <input type="number" id="prodThreshold" min="1" placeholder="e.g. 5" value="5" />
+            <small style="color: #6b7280; font-size: 11px;">Alert triggers when stock drops below this number.</small>
+          </div>
+
+        </div>
+
+        <!-- 3. Modal Actions -->
+        <div class="modal-footer-actions">
+          <button type="button" class="btn-cancel-modal" onclick="closeProductModal()">Cancel</button>
+          <button type="submit" class="btn-save-modal" id="btnSaveProduct">
+            <i class="fa-solid fa-check"></i> Save Product
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="adminToast">
+    <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+    <span id="toastText">Product updated successfully!</span>
+  </div>
+
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/admin-products.js"></script>
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FreshMart - Online Grocery Store</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/index.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">
+        <a href="index.html">
+          <img
+            src="../images/logo.jpeg"
+            alt="FreshMart Logo"
+            class="logo-img"
+          />
+          Fresh<span class="logo-highlight">Mart</span>
+        </a>
+      </div>
+    
+<div class="location-picker-box">
+  <i class="fa-solid fa-location-dot location-icon"></i>
+  <div class="location-info">
+    <span class="location-label">Deliver to</span>
+    <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()">
+      <span id="currentPincode">Select Pincode</span> <i class="fa-solid fa-chevron-down"></i>
+    </button>
+  </div>
+</div>
+
+
+<div class="pincode-modal" id="pincodeModal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closePincodeModal()">&times;</span>
+    <h3>Enter Delivery Pincode</h3>
+    <p>Check product availability and delivery time</p>
+    <div class="pincode-input-group">
+      <input type="text" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit Pincode" />
+      <button type="button" onclick="savePincode()">Apply</button>
+    </div>
+    <span class="pincode-msg" id="pincodeMsg"></span>
+  </div>
+</div>
+
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search fresh vegetables, fruits, milk..."
+        />
+        <button type="button" id="searchBtn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
+
+      <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+  <label for="menu-toggle" class="hamburger-btn">
+    <i class="fa-solid fa-bars"></i>
+  </label>
+
+
+      <nav class="nav-links">
+    <a href="index.html" class="nav-item active">Home</a>
+    <a href="products.html" class="nav-item">Groceries</a>
+    
+   <a href="cart.html" class="cart-btn" aria-label="Cart">
+  <i class="fa-solid fa-cart-shopping"></i>
+  <span class="cart-badge" id="cartCount">0</span>
+</a>
+
+    <a href="login.html" id="userAuthBtn" class="user-link">
+    <i class="fa-regular fa-user"></i>
+    <span>Login</span>
+    </a>
+  </nav>
+    </header>
+
+
+<main>
+  <section class="hero-banner">
+    <div class="hero-image">
+      <img src="../images/banner1.png" alt="Fresh Grocery Basket">
+    
+      <div class="hero-content">
+        <h1>ALL YOUR <span class="highlight">GROCERY</span><br>NEEDS MET.</h1>
+        <p>Quality fresh vegetables, fruits & daily essentials.</p>
+        
+        <div class="hero-buttons">
+          <a href="products.html" class="btn-shop">SHOP NOW</a>
+          <a href="products.html" class="btn-explore">EXPLORE MENU</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!-- Browse By Categories Section -->
+<section class="categories-section">
+  <div class="categories-header">
+    <div class="title-group">
+      <h4>Categories</h4>
+      <h2>Featured Categories</h2>
+    </div>
+    <div class="nav-arrows">
+      <button class="arrow-btn" type="button"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="arrow-btn" type="button"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </div>
+
+  <div class="categories-container">
+   
+    <a href="products.html?cat=fruits" class="category-item">
+      <div class="circle-box border-pink">
+        <img src="../images/fruits2.jpeg" alt="Fresh Fruits">
+      </div>
+      <h3>Fresh Fruits</h3>
+      <span>10+ Items</span>
+    </a>
+
+    
+    <a href="products.html?cat=vegetables" class="category-item">
+      <div class="circle-box border-yellow">
+        <img src="../images/vagetables.jpeg" alt="Vegetables">
+      </div>
+      <h3>Vegetables</h3>
+      <span>120+ Items</span>
+    </a>
+
+    
+    <a href="products.html?cat=meat" class="category-item">
+      <div class="circle-box border-green">
+        <img src="../images/pure1.jpg" alt="pure fruits">
+      </div>
+      <h3>Pure Fruits</h3>
+      <span>110+ Items</span>
+    </a>
+
+    <a href="products.html?cat=fastfood" class="category-item">
+      <div class="circle-box border-blue">
+        <img src="../images/fast.jpg" alt="Fast Food">
+      </div>
+      <h3>Fast Food</h3>
+      <span>50+ Items</span>
+    </a>
+
+   
+    <a href="products.html?cat=bakery" class="category-item">
+      <div class="circle-box border-orange">
+        <img src="../images/bread.jpeg" alt="Dry Bread">
+      </div>
+      <h3>Dry Bread</h3>
+      <span>70+ Items</span>
+    </a>
+
+    <a href="products.html?cat=oil" class="category-item">
+      <div class="circle-box border-lime">
+        <img src="../images/oil.jpeg" alt="Organic Oil">
+      </div>
+      <h3>Organic Oil</h3>
+      <span>20+ Items</span>
+    </a>
+
+   
+    <a href="products.html?cat=cake" class="category-item">
+      <div class="circle-box border-magenta">
+        <img src="../images/layer.jpeg" alt="Layer Cake">
+      </div>
+      <h3>Layer Cake</h3>
+      <span>30+ Items</span>
+    </a>
+  </div>
+</section>
+
+
+
+<!-- Promo Banners Section -->
+<section class="promo-banners-section">
+  <div class="promo-grid">
+    
+    <!-- Banner 1 -->
+    <div class="promo-card bg-yellow">
+      <div class="promo-content">
+        <h2>Now Get 20%<br>Off For Fruits</h2>
+        <a href="products.html?cat=fruits" class="btn-buy-now">Buy Now</a>
+      </div>
+      <div class="promo-img">
+        <img src="../images/fruits2.jpeg" alt="Fruits Banner">
+      </div>
+    </div>
+
+    <!-- Banner 2 -->
+    <div class="promo-card bg-pink">
+      <div class="promo-content">
+        <h2>Pure Vegetables<br>For Healthy</h2>
+        <a href="products.html?cat=vegetables" class="btn-buy-now">Buy Now</a>
+      </div>
+      <div class="promo-img">
+        <img src="../images/vagetables.jpeg" alt="Vegetables Banner">
+      </div>
+    </div>
+
+    <!-- Banner 3 -->
+    <div class="promo-card bg-green">
+      <div class="promo-content">
+        <h2>Face Nourishing<br>Beauty creams</h2>
+        <a href="products.html?cat=beauty" class="btn-buy-now">Buy Now</a>
+      </div>
+      <div class="promo-img">
+        <img src="../images/layer.jpeg" alt="Beauty Creams Banner">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Featured Products Section -->
+<section class="products-section">
+  <div class="products-header">
+    <div class="title-group">
+      <h4>Our Shop</h4>
+      <h2>Featured Products</h2>
+    </div>
+    <a href="products.html" class="btn-view-all">
+      View All <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <div class="products-grid">
+    <!-- Product Card 1 -->
+    <div class="product-card" data-id="1">
+      <span class="badge-discount">15% OFF</span>
+      <div class="product-img-box">
+        <img src="../images/vagetables.jpeg" alt="Fresh Organic Vegetables">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Vegetables</span>
+        <h3 class="product-title">Fresh Organic Veggies</h3>
+        <div class="product-price">
+          <span class="current-price">₹40</span>
+          <span class="old-price">₹48</span>
+          <span class="unit">/ kg</span>
+        </div>
+        
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 1)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(1, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(1, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Card 2 -->
+    <div class="product-card" data-id="2">
+      <span class="badge-discount">20% OFF</span>
+      <div class="product-img-box">
+        <img src="../images/fruits2.jpeg" alt="Fresh Apple">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Fruits</span>
+        <h3 class="product-title">Fresh Red Apples</h3>
+        <div class="product-price">
+          <span class="current-price">₹160</span>
+          <span class="old-price">₹200</span>
+          <span class="unit">/ kg</span>
+        </div>
+        
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 2)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(2, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(2, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Card 3 -->
+    <div class="product-card" data-id="3">
+      <div class="product-img-box">
+        <img src="../images/bread.jpeg" alt="Fresh Bread">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Bakery</span>
+        <h3 class="product-title">Fresh Brown Bread</h3>
+        <div class="product-price">
+          <span class="current-price">₹35</span>
+          <span class="unit">/ pack</span>
+        </div>
+        
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 3)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(3, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(3, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Card 4 -->
+    <div class="product-card" data-id="4">
+      <span class="badge-discount">10% OFF</span>
+      <div class="product-img-box">
+        <img src="../images/fast.jpg" alt="Fast Food Snack">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Snacks</span>
+        <h3 class="product-title">Tasty Fast Snack</h3>
+        <div class="product-price">
+          <span class="current-price">₹80</span>
+          <span class="old-price">₹90</span>
+          <span class="unit">/ pack</span>
+        </div>
+        
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 4)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(4, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(4, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Card 5 -->
+    <div class="product-card" data-id="5">
+      <span class="badge-discount">5% OFF</span>
+      <div class="product-img-box">
+        <img src="../images/pure1.jpg" alt="Organic Milk">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Dairy</span>
+        <h3 class="product-title">Fresh Organic Milk</h3>
+        <div class="product-price">
+          <span class="current-price">₹65</span>
+          <span class="old-price">₹70</span>
+          <span class="unit">/ L</span>
+        </div>
+        
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 5)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(5, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(5, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Card 6 -->
+    <div class="product-card" data-id="6">
+      <span class="badge-discount">25% OFF</span>
+      <div class="product-img-box">
+        <img src="../images/oil.jpeg" alt="Pure Honey">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Organic</span>
+        <h3 class="product-title">Pure Natural Honey</h3>
+        <div class="product-price">
+          <span class="current-price">₹220</span>
+          <span class="old-price">₹295</span>
+          <span class="unit">/ bottle</span>
+        </div>
+        
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 6)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(6, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(6, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trending / Buy Again Carousel Section -->
+<section class="carousel-section">
+  <div class="carousel-header">
+    <div class="title-group">
+      <h4>Top Picks</h4>
+      <h2>Trending & Buy Again</h2>
+    </div>
+    <div class="carousel-arrows">
+      <button type="button" class="c-arrow-btn" onclick="scrollCarousel(-1)">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button type="button" class="c-arrow-btn" onclick="scrollCarousel(1)">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="carousel-container" id="trendingCarousel">
+    <!-- Carousel Item 1 -->
+    <div class="product-card carousel-card" data-id="101">
+      <span class="badge-discount">Best Seller</span>
+      <div class="product-img-box">
+        <img src="../images/vagetables.jpeg" alt="Fresh Tomatoes">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Vegetables</span>
+        <h3 class="product-title">Red Tomatoes</h3>
+        <div class="product-price">
+          <span class="current-price">₹30</span>
+          <span class="old-price">₹40</span>
+          <span class="unit">/ kg</span>
+        </div>
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 101)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(101, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(101, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Item 2 -->
+    <div class="product-card carousel-card" data-id="102">
+      <div class="product-img-box">
+        <img src="../images/fruits2.jpeg" alt="Fresh Bananas">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Fruits</span>
+        <h3 class="product-title">Ripe Bananas</h3>
+        <div class="product-price">
+          <span class="current-price">₹50</span>
+          <span class="unit">/ dozen</span>
+        </div>
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 102)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(102, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(102, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Item 3 -->
+    <div class="product-card carousel-card" data-id="103">
+      <span class="badge-discount">10% OFF</span>
+      <div class="product-img-box">
+        <img src="../images/pure1.jpg" alt="Fresh Butter">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Dairy</span>
+        <h3 class="product-title">Amul Butter</h3>
+        <div class="product-price">
+          <span class="current-price">₹54</span>
+          <span class="old-price">₹60</span>
+          <span class="unit">/ pack</span>
+        </div>
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 103)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(103, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(103, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Item 4 -->
+    <div class="product-card carousel-card" data-id="104">
+      <div class="product-img-box">
+        <img src="../images/bread.jpeg" alt="Whole Wheat Bread">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">Bakery</span>
+        <h3 class="product-title">Wheat Bread</h3>
+        <div class="product-price">
+          <span class="current-price">₹45</span>
+          <span class="unit">/ pack</span>
+        </div>
+        <div class="cart-action-container">
+          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 104)">
+            <i class="fa-solid fa-cart-plus"></i> Add
+          </button>
+          <div class="qty-counter-box hidden">
+            <button type="button" class="qty-btn" onclick="updateQty(104, -1, this)">-</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn" onclick="updateQty(104, 1, this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+  <!-- Storewide Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <img src="../images/logo.jpeg" alt="FreshMart Logo" />
+          Fresh<span>Mart</span>
+        </a>
+        <p class="footer-desc">
+          FreshMart is your trusted neighborhood online grocery store delivering fresh farm vegetables, crisp fruits, organic dairy, and pantry staples in under 2 hours.
+        </p>
+        <div class="footer-social-links">
+          <a href="javascript:void(0)" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Top Categories</h4>
+        <ul class="footer-links-list">
+          <li><a href="products.html?cat=vegetables"><i class="fa-solid fa-chevron-right"></i> Fresh Vegetables</a></li>
+          <li><a href="products.html?cat=fruits"><i class="fa-solid fa-chevron-right"></i> Juicy Fruits</a></li>
+          <li><a href="products.html?cat=dairy"><i class="fa-solid fa-chevron-right"></i> Farm Dairy & Milk</a></li>
+          <li><a href="products.html?cat=bakery"><i class="fa-solid fa-chevron-right"></i> Bakery & Breads</a></li>
+          <li><a href="products.html?cat=organic"><i class="fa-solid fa-chevron-right"></i> Organic Staples</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Care</h4>
+        <ul class="footer-links-list">
+          <li><a href="profile.html"><i class="fa-solid fa-chevron-right"></i> My Account & Orders</a></li>
+          <li><a href="cart.html"><i class="fa-solid fa-chevron-right"></i> View Cart & Checkout</a></li>
+          <li><a href="javascript:void(0)" onclick="openPincodeModal()"><i class="fa-solid fa-chevron-right"></i> Delivery Areas & Pincode</a></li>
+          <li><a href="products.html"><i class="fa-solid fa-chevron-right"></i> Special Offers & Deals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <strong>1800-FRESHMART (Toll-Free)</strong>
+            <span>7:00 AM - 10:00 PM (All 7 Days)</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <strong>support@freshmart.in</strong>
+            <span>Quick response within 1 hour</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>FreshMart Superstores Ltd.</strong>
+            <span>Bengaluru, Karnataka, India</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div>
+          &copy; 2026 FreshMart Grocery Store. All Rights Reserved. Delivered Fresh & Fast.
+        </div>
+        <div class="payment-badges-row">
+          <span>100% Safe Payments:</span>
+          <i class="fa-brands fa-google-pay" title="UPI GPay"></i>
+          <i class="fa-brands fa-cc-visa" title="Visa"></i>
+          <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+          <i class="fa-solid fa-money-bill-wave" title="Cash on Delivery"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+   
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/index.js"></script>
+</body>
+</html>

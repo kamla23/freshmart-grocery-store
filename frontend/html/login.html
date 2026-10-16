@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Login & Sign Up - FreshMart</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Unified Header Navigation -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="../images/logo.jpeg" alt="FreshMart Logo" class="logo-img" />
+        Fresh<span class="logo-highlight">Mart</span>
+      </a>
+    </div>
+
+    <!-- Location / Pincode Picker -->
+    <div class="location-picker-box">
+      <i class="fa-solid fa-location-dot location-icon"></i>
+      <div class="location-info">
+        <span class="location-label">Deliver to</span>
+        <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()">
+          <span id="currentPincode">Select Pincode</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search fresh vegetables, fruits, milk..." />
+      <button type="button" id="searchBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox" />
+    <label for="menu-toggle" class="hamburger-btn">
+      <i class="fa-solid fa-bars"></i>
+    </label>
+
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="products.html" class="nav-item">Groceries</a>
+      <a href="cart.html" class="cart-btn" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+      <a href="login.html" id="userAuthBtn" class="user-link active" style="color: #10b981; font-weight: 700;">
+        <i class="fa-regular fa-user"></i>
+        <span>Login</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Pincode Modal Popup -->
+  <div class="pincode-modal" id="pincodeModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closePincodeModal()">&times;</span>
+      <h3>Enter Delivery Pincode</h3>
+      <p>Check product availability and delivery time</p>
+      <div class="pincode-input-group">
+        <input type="text" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit Pincode" />
+        <button type="button" onclick="savePincode()">Apply</button>
+      </div>
+      <span class="pincode-msg" id="pincodeMsg"></span>
+    </div>
+  </div>
+
+  <!-- Main Auth Page Content -->
+  <main class="auth-page-container">
+    <div class="auth-card">
+      
+      <div class="auth-header">
+        <div class="auth-logo">
+          <img src="../images/logo.jpeg" alt="FreshMart Logo" />
+          Fresh<span>Mart</span>
+        </div>
+        <p>Your online fresh grocery supermarket</p>
+      </div>
+
+      <!-- Auth Switcher Tabs -->
+      <div class="auth-tabs-row">
+        <button type="button" class="auth-tab-btn active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</button>
+        <button type="button" class="auth-tab-btn" id="tabSignUp" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <div class="auth-body">
+        
+        <!-- Error Message Banner -->
+        <div class="auth-error-banner" id="authErrorMsg"></div>
+
+        <!-- ================= 1. SIGN IN FORM ================= -->
+        <form class="auth-form active" id="signInForm" onsubmit="handleSignIn(event)">
+          <div class="auth-field-group">
+            <label for="loginIdentifier">Email or 10-Digit Mobile</label>
+            <div class="input-with-icon">
+              <i class="fa-regular fa-envelope field-icon"></i>
+              <input type="text" id="loginIdentifier" placeholder="e.g. rahul.sharma@example.com or 9876543210" required />
+            </div>
+          </div>
+
+          <div class="auth-field-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-lock field-icon"></i>
+              <input type="password" id="loginPassword" placeholder="Enter your password" required />
+              <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginPassword', this)">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-options-row">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe" checked />
+              <span>Remember me</span>
+            </label>
+            <a href="javascript:void(0)" class="forgot-password-link" onclick="handleForgotPassword()">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn-auth-submit" id="btnSignIn">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to FreshMart
+          </button>
+
+          <div class="auth-divider">or continue with</div>
+
+          <button type="button" class="btn-social-google" onclick="handleSocialAuth('Google')">
+            <i class="fa-brands fa-google" style="color: #ea4335;"></i> Google Account
+          </button>
+
+          <div class="auth-footer-text">
+            New to FreshMart? <a href="javascript:void(0)" onclick="switchAuthTab('signup')">Create an Account</a>
+          </div>
+        </form>
+
+        <!-- ================= 2. SIGN UP FORM ================= -->
+        <form class="auth-form" id="signUpForm" onsubmit="handleSignUp(event)">
+          
+          <div class="auth-field-group">
+            <label for="regFullName">Full Name</label>
+            <div class="input-with-icon">
+              <i class="fa-regular fa-user field-icon"></i>
+              <input type="text" id="regFullName" placeholder="e.g. Rahul Sharma" required />
+            </div>
+          </div>
+
+          <div class="auth-field-group">
+            <label for="regPhone">Mobile Number (10 digits)</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-phone field-icon"></i>
+              <input type="tel" id="regPhone" maxlength="10" placeholder="10-digit mobile number" required />
+            </div>
+          </div>
+
+          <div class="auth-field-group">
+            <label for="regEmail">Email Address</label>
+            <div class="input-with-icon">
+              <i class="fa-regular fa-envelope field-icon"></i>
+              <input type="email" id="regEmail" placeholder="your.name@example.com" required />
+            </div>
+          </div>
+
+          <div class="auth-field-group">
+            <label for="regPassword">Create Password</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-lock field-icon"></i>
+              <input type="password" id="regPassword" placeholder="Minimum 6 characters" required />
+              <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('regPassword', this)">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-field-group">
+            <label for="regConfirmPassword">Confirm Password</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-shield-halved field-icon"></i>
+              <input type="password" id="regConfirmPassword" placeholder="Re-enter password" required />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth-submit" id="btnSignUp">
+            <i class="fa-solid fa-user-plus"></i> Create My Account
+          </button>
+
+          <div class="auth-divider">or register with</div>
+
+          <button type="button" class="btn-social-google" onclick="handleSocialAuth('Google')">
+            <i class="fa-brands fa-google" style="color: #ea4335;"></i> Google Account
+          </button>
+
+          <div class="auth-footer-text">
+            Already have an account? <a href="javascript:void(0)" onclick="switchAuthTab('signin')">Sign In</a>
+          </div>
+        </form>
+
+        <!-- Discreet Store Staff Gateway Link -->
+        <div class="auth-admin-link-row">
+          <span>Store Staff or Owner?</span>
+          <a href="admin-login.html">Admin Portal <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Storewide Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <img src="../images/logo.jpeg" alt="FreshMart Logo" />
+          Fresh<span>Mart</span>
+        </a>
+        <p class="footer-desc">
+          FreshMart is your trusted neighborhood online grocery store delivering fresh farm vegetables, crisp fruits, organic dairy, and pantry staples in under 2 hours.
+        </p>
+        <div class="footer-social-links">
+          <a href="javascript:void(0)" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Top Categories</h4>
+        <ul class="footer-links-list">
+          <li><a href="products.html?cat=vegetables"><i class="fa-solid fa-chevron-right"></i> Fresh Vegetables</a></li>
+          <li><a href="products.html?cat=fruits"><i class="fa-solid fa-chevron-right"></i> Juicy Fruits</a></li>
+          <li><a href="products.html?cat=dairy"><i class="fa-solid fa-chevron-right"></i> Farm Dairy & Milk</a></li>
+          <li><a href="products.html?cat=bakery"><i class="fa-solid fa-chevron-right"></i> Bakery & Breads</a></li>
+          <li><a href="products.html?cat=organic"><i class="fa-solid fa-chevron-right"></i> Organic Staples</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Care</h4>
+        <ul class="footer-links-list">
+          <li><a href="profile.html"><i class="fa-solid fa-chevron-right"></i> My Account & Orders</a></li>
+          <li><a href="cart.html"><i class="fa-solid fa-chevron-right"></i> View Cart & Checkout</a></li>
+          <li><a href="javascript:void(0)" onclick="openPincodeModal()"><i class="fa-solid fa-chevron-right"></i> Delivery Areas & Pincode</a></li>
+          <li><a href="products.html"><i class="fa-solid fa-chevron-right"></i> Special Offers & Deals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <strong>1800-FRESHMART (Toll-Free)</strong>
+            <span>7:00 AM - 10:00 PM (All 7 Days)</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <strong>support@freshmart.in</strong>
+            <span>Quick response within 1 hour</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>FreshMart Superstores Ltd.</strong>
+            <span>Bengaluru, Karnataka, India</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div>
+          &copy; 2026 FreshMart Grocery Store. All Rights Reserved. Delivered Fresh & Fast.
+        </div>
+        <div class="payment-badges-row">
+          <span>100% Safe Payments:</span>
+          <i class="fa-brands fa-google-pay" title="UPI GPay"></i>
+          <i class="fa-brands fa-cc-visa" title="Visa"></i>
+          <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+          <i class="fa-solid fa-money-bill-wave" title="Cash on Delivery"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/login.js"></script>
+</body>
+</html>

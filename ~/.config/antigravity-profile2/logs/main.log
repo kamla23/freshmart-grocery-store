@@ -1,0 +1,15 @@
+[2026-09-07 12:11:07.553] [info]  [IDE Wizard] /home/kamla/.gemini/antigravity-ide exists — IDE already installed, skipping.
+[2026-09-07 12:11:07.561] [info]  Starting app (v2.0.11) with dynamic port…
+[2026-09-07 12:11:07.566] [info]  
+Spawning: /opt/antigravity/resources/bin/language_server --standalone --override_ide_name antigravity --subclient_type hub --override_ide_version 2.0.11 --override_user_agent_name antigravity --https_server_port 0 --csrf_token e2e1c8c2-72a1-4e19-8c70-188be83a0c15 --app_data_dir antigravity --api_server_url https://generativelanguage.googleapis.com --cloud_code_endpoint https://daily-cloudcode-pa.googleapis.com --enable_sidecars
+
+[2026-09-07 12:11:08.096] [info]  [Auto-Restart] Port changed! Reloading all windows with URL: https://127.0.0.1:38071/
+[2026-09-07 12:11:08.097] [info]  
+============================================================
+[2026-09-07 12:11:08.098] [info]    Local:       https://127.0.0.1:38071/
+[2026-09-07 12:11:08.098] [info]    LS Logs:     /home/kamla/freshmart-grocery-store/~/.config/antigravity-profile2/logs/language_server.log
+[2026-09-07 12:11:08.098] [info]    Electron Logs: /home/kamla/freshmart-grocery-store/~/.config/antigravity-profile2/logs/main.log
+[2026-09-07 12:11:08.099] [info]  ============================================================
+
+[2026-09-07 12:11:18.230] [warn]  APPIMAGE env is not defined, current application is not an AppImage
+[2026-09-07 12:44:32.765] [info]  Shutting down language server…

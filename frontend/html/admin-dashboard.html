@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard Overview - FreshMart</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin-dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Admin Topbar Navigation -->
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="admin-brand">
+      <img src="../images/logo.jpeg" alt="FreshMart Logo" class="admin-logo-img" />
+      <div class="admin-brand-title">Fresh<span>Mart</span></div>
+      <span class="admin-badge">Admin Portal</span>
+    </a>
+
+    <div class="admin-top-right">
+      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront">
+        <i class="fa-solid fa-store"></i> <span>View Store</span>
+      </a>
+
+      <div class="admin-user-pill">
+        <div class="admin-avatar">K</div>
+        <div class="admin-user-info">
+          <span class="admin-user-name">Kamla</span>
+          <span class="admin-user-role">Super Admin</span>
+        </div>
+      </div>
+
+      <a href="admin-login.html" class="btn-view-store" title="Log Out" onclick="handleAdminLogout(event)">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Admin Main Layout -->
+  <div class="admin-layout">
+    
+    <!-- Admin Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <button type="button" class="admin-nav-item active">
+        <i class="fa-solid fa-chart-pie"></i> <span>Overview</span>
+      </button>
+      <a href="admin-orders.html" class="admin-nav-item">
+        <i class="fa-solid fa-boxes-packing"></i> <span>Orders</span>
+      </a>
+      <a href="admin-products.html" class="admin-nav-item">
+        <i class="fa-solid fa-warehouse"></i> <span>Inventory</span>
+      </a>
+      <button type="button" class="admin-nav-item" onclick="alert('Customers list: 42 active registered users.')">
+        <i class="fa-solid fa-users"></i> <span>Customers</span>
+      </button>
+      <div class="admin-sidebar-divider"></div>
+      <a href="index.html" class="admin-nav-item">
+        <i class="fa-solid fa-arrow-left"></i> <span>Exit to Store</span>
+      </a>
+    </aside>
+
+    <!-- Main Dashboard Body -->
+    <main class="admin-main">
+      
+      <!-- Header with live date -->
+      <div class="dashboard-header">
+        <h1>Admin Dashboard Overview</h1>
+        <div class="date-badge" id="liveDateBadge">
+          <i class="fa-regular fa-calendar" style="color: #10b981; margin-right: 6px;"></i>
+          <span id="currentDateStr">Thursday, 03 Sep 2026</span>
+        </div>
+      </div>
+
+      <!-- ================= 1. KEY METRICS SUMMARY ================= -->
+      <section class="metrics-grid">
+        
+        <!-- Metric 1: Total Sales -->
+        <div class="metric-card metric-sales">
+          <div class="metric-info">
+            <span class="metric-label">Total Sales</span>
+            <span class="metric-value">₹<span id="metricSalesAmount">0</span></span>
+            <span class="metric-sub"><i class="fa-solid fa-arrow-trend-up"></i> +14.8% this week</span>
+          </div>
+          <div class="metric-icon-box">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+          </div>
+        </div>
+
+        <!-- Metric 2: Total Orders -->
+        <div class="metric-card metric-orders">
+          <div class="metric-info">
+            <span class="metric-label">Total Orders</span>
+            <span class="metric-value" id="metricOrdersCount">0</span>
+            <span class="metric-sub" style="color: #3b82f6;"><i class="fa-solid fa-circle-check"></i> 100% Fulfilled</span>
+          </div>
+          <div class="metric-icon-box">
+            <i class="fa-solid fa-box"></i>
+          </div>
+        </div>
+
+        <!-- Metric 3: Total Users -->
+        <div class="metric-card metric-users">
+          <div class="metric-info">
+            <span class="metric-label">Registered Users</span>
+            <span class="metric-value" id="metricUsersCount">42</span>
+            <span class="metric-sub" style="color: #8b5cf6;"><i class="fa-solid fa-user-plus"></i> +6 new today</span>
+          </div>
+          <div class="metric-icon-box">
+            <i class="fa-solid fa-users"></i>
+          </div>
+        </div>
+
+        <!-- Metric 4: Low-Stock Alert Badge -->
+        <div class="metric-card metric-stock">
+          <div class="metric-info">
+            <span class="metric-label">Low Stock Alerts</span>
+            <span class="metric-value" id="metricLowStockCount">3</span>
+            <span class="metric-sub" style="color: #d97706;">
+              <span class="pulse-badge"></span> Needs Restocking
+            </span>
+          </div>
+          <div class="metric-icon-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= 2. LOW-STOCK ALERT DRAWER ================= -->
+      <section class="low-stock-panel" id="lowStockSection">
+        <div class="low-stock-header">
+          <div class="low-stock-title">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i>
+            <span>Urgent: Low-Stock Grocery Items (&lt; 5 units remaining)</span>
+          </div>
+        </div>
+        <div class="low-stock-items-row" id="lowStockItemsContainer">
+          <!-- Populated dynamically via admin-dashboard.js -->
+        </div>
+      </section>
+
+      <!-- ================= 3. RECENT ORDERS TABLE ================= -->
+      <section class="orders-table-card">
+        <div class="table-card-header">
+          <h2>Recent Customer Orders (Latest 5)</h2>
+          <div class="table-actions">
+            <span style="font-size: 13px; color: #6b7280;">Live Two-Way Status Sync</span>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Delivery Slot</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Order Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminOrdersTbody">
+              <!-- Orders injected dynamically via admin-dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Admin Order Inspection Modal -->
+  <div class="admin-modal-overlay" id="adminOrderModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="inspectModalTitle">Order Inspection Details</h3>
+        <button type="button" class="admin-modal-close" onclick="closeAdminOrderModal()">&times;</button>
+      </div>
+
+      <div class="receipt-meta-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: #f9fafb; padding: 14px; border-radius: 8px; font-size: 13px; margin-bottom: 20px;">
+        <div>
+          <strong>Order ID:</strong> <span id="inspOrderId">#FM-123456</span><br>
+          <strong>Placed On:</strong> <span id="inspOrderDate">03 Sep 2026</span><br>
+          <strong>Customer:</strong> <span id="inspCustName">Rahul Sharma</span>
+        </div>
+        <div>
+          <strong>Status:</strong> <span id="inspStatus">Processing</span><br>
+          <strong>Payment:</strong> <span id="inspPayment">Cash on Delivery</span><br>
+          <strong>Phone:</strong> <span id="inspPhone">+91 9876543210</span>
+        </div>
+        <div style="grid-column: 1/-1;">
+          <strong><i class="fa-regular fa-clock" style="color:#0d5c52;"></i> Delivery Slot:</strong> <span id="inspSlot">Today: 5 PM - 7 PM</span><br>
+          <strong><i class="fa-solid fa-location-dot" style="color:#0d5c52;"></i> Shipping Address:</strong> <span id="inspAddress">Flat 402, Bengaluru</span><br>
+          <strong><i class="fa-solid fa-arrows-rotate" style="color:#0d5c52;"></i> Substitution:</strong> <span id="inspSubstitution">Replace with nearest brand</span>
+        </div>
+      </div>
+
+      <!-- Item list table -->
+      <table class="admin-table" style="margin-bottom: 20px;">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Pack</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="inspItemsTbody">
+          <!-- Injected via admin-dashboard.js -->
+        </tbody>
+      </table>
+
+      <div style="text-align: right; padding-top: 10px; border-top: 1px solid #e5e7eb;">
+        <button type="button" class="btn-inspect" style="padding: 8px 18px; font-size: 14px;" onclick="closeAdminOrderModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="adminToast">
+    <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+    <span id="toastText">Order status updated successfully!</span>
+  </div>
+
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/admin-dashboard.js"></script>
+</body>
+</html>

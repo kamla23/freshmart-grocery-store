@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account & Orders - FreshMart</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/profile.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Unified Header Navigation -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="../images/logo.jpeg" alt="FreshMart Logo" class="logo-img" />
+        Fresh<span class="logo-highlight">Mart</span>
+      </a>
+    </div>
+
+    <!-- Location / Pincode Picker -->
+    <div class="location-picker-box">
+      <i class="fa-solid fa-location-dot location-icon"></i>
+      <div class="location-info">
+        <span class="location-label">Deliver to</span>
+        <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()">
+          <span id="currentPincode">Select Pincode</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search fresh vegetables, fruits, milk..." />
+      <button type="button" id="searchBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox" />
+    <label for="menu-toggle" class="hamburger-btn">
+      <i class="fa-solid fa-bars"></i>
+    </label>
+
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="products.html" class="nav-item">Groceries</a>
+      <a href="cart.html" class="cart-btn" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+      <a href="profile.html" id="userAuthBtn" class="user-link active" style="color: #10b981; font-weight: 700;">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>My Account</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Pincode Modal Popup -->
+  <div class="pincode-modal" id="pincodeModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closePincodeModal()">&times;</span>
+      <h3>Enter Delivery Pincode</h3>
+      <p>Check product availability and delivery time</p>
+      <div class="pincode-input-group">
+        <input type="text" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit Pincode" />
+        <button type="button" onclick="savePincode()">Apply</button>
+      </div>
+      <span class="pincode-msg" id="pincodeMsg"></span>
+    </div>
+  </div>
+
+  <!-- Main Profile & Orders Layout -->
+  <main class="profile-container">
+    <h1 class="profile-page-title">
+      <i class="fa-solid fa-user-gear"></i> My Account & Orders
+    </h1>
+
+    <div class="profile-layout">
+      
+      <!-- Left Sidebar: Profile Summary & Navigation Tabs -->
+      <aside class="profile-sidebar">
+        <div class="user-profile-card">
+          <div class="user-avatar" id="avatarInitial">R</div>
+          <h3 class="user-name" id="sideUserName">Rahul Sharma</h3>
+          <p class="user-email" id="sideUserEmail">rahul.sharma@example.com</p>
+
+          <div class="user-stats-row">
+            <div class="stat-item">
+              <span class="stat-value" id="statsOrdersCount">0</span>
+              <span class="stat-label">Orders</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="statsAddressesCount">1</span>
+              <span class="stat-label">Addresses</span>
+            </div>
+          </div>
+        </div>
+
+        <nav class="profile-nav-menu">
+          <button type="button" class="profile-nav-btn active" data-tab="orders" onclick="switchTab('orders')">
+            <i class="fa-solid fa-box-open"></i> My Orders
+          </button>
+          <button type="button" class="profile-nav-btn" data-tab="profile" onclick="switchTab('profile')">
+            <i class="fa-regular fa-user"></i> Personal Info
+          </button>
+          <button type="button" class="profile-nav-btn" data-tab="addresses" onclick="switchTab('addresses')">
+            <i class="fa-solid fa-map-location-dot"></i> Saved Addresses
+          </button>
+          <button type="button" class="profile-nav-btn logout-btn" onclick="handleLogout()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Right Main Content Panels -->
+      <div class="profile-content-card">
+        
+        <!-- ================= TAB 1: MY ORDERS ================= -->
+        <section class="tab-pane active" id="paneOrders">
+          <div class="tab-header">
+            <h2>Order History</h2>
+            <div class="order-filters">
+              <button type="button" class="filter-chip active" onclick="filterOrderList('ALL', this)">All</button>
+              <button type="button" class="filter-chip" onclick="filterOrderList('Processing', this)">Processing</button>
+              <button type="button" class="filter-chip" onclick="filterOrderList('Out for Delivery', this)">Out for Delivery</button>
+              <button type="button" class="filter-chip" onclick="filterOrderList('Delivered', this)">Delivered</button>
+            </div>
+          </div>
+
+          <!-- Orders Container -->
+          <div class="orders-list" id="ordersListContainer">
+            <!-- Dynamic order cards injected via profile.js -->
+          </div>
+
+          <!-- Empty Orders State -->
+          <div class="empty-orders-box hidden" id="emptyOrdersState">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <h3>No orders found!</h3>
+            <p>You haven't placed any orders yet. Explore our freshest groceries today.</p>
+            <a href="products.html" class="btn-start-shopping">Start Shopping</a>
+          </div>
+        </section>
+
+        <!-- ================= TAB 2: PERSONAL INFORMATION ================= -->
+        <section class="tab-pane" id="paneProfile">
+          <div class="tab-header">
+            <h2>Personal Information</h2>
+          </div>
+
+          <form id="profileForm" onsubmit="handleSaveProfile(event)">
+            <div class="profile-form-grid">
+              
+              <div class="profile-form-group">
+                <label for="profFullName">Full Name</label>
+                <input type="text" id="profFullName" placeholder="Your full name" required />
+              </div>
+
+              <div class="profile-form-group">
+                <label for="profEmail">Email Address</label>
+                <input type="email" id="profEmail" placeholder="your.email@example.com" required />
+              </div>
+
+              <div class="profile-form-group">
+                <label for="profPhone">Mobile Number</label>
+                <input type="tel" id="profPhone" maxlength="10" placeholder="10-digit mobile number" required />
+              </div>
+
+              <div class="profile-form-group">
+                <label for="profGender">Gender</label>
+                <select id="profGender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+
+            </div>
+
+            <button type="submit" class="btn-save-profile">
+              <i class="fa-solid fa-check"></i> Save Changes
+            </button>
+
+            <div class="profile-update-msg" id="profileMsg">
+              Profile updated successfully!
+            </div>
+          </form>
+        </section>
+
+        <!-- ================= TAB 3: SAVED ADDRESSES ================= -->
+        <section class="tab-pane" id="paneAddresses">
+          <div class="tab-header">
+            <h2>Saved Delivery Addresses</h2>
+            <button type="button" class="btn-add-address" onclick="openAddressModal()">
+              <i class="fa-solid fa-plus"></i> Add New Address
+            </button>
+          </div>
+
+          <!-- Addresses Grid -->
+          <div class="addresses-grid" id="addressesGrid">
+            <!-- Dynamic address cards injected via profile.js -->
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= ORDER RECEIPT MODAL ================= -->
+  <div class="modal-overlay" id="orderReceiptModal">
+    <div class="receipt-modal-card">
+      <div class="receipt-header">
+        <div class="receipt-logo">
+          Fresh<span>Mart</span> <small style="font-size: 13px; color: #6b7280; font-weight: 400;">Tax Invoice</small>
+        </div>
+        <button type="button" class="receipt-close-btn" onclick="closeReceiptModal()">&times;</button>
+      </div>
+
+      <div class="receipt-meta-grid">
+        <div>
+          <strong>Order ID:</strong> <span id="recOrderId">#FM-123456</span><br>
+          <strong>Order Date:</strong> <span id="recOrderDate">03 Sep 2026</span>
+        </div>
+        <div>
+          <strong>Status:</strong> <span class="status-badge delivered" id="recStatusBadge">Delivered</span><br>
+          <strong>Payment:</strong> <span id="recPayment">Cash on Delivery</span>
+        </div>
+        <div style="grid-column: 1/-1;">
+          <strong><i class="fa-regular fa-clock"></i> Delivery Slot:</strong> <span id="recSlot">Today, 5:00 PM - 7:00 PM</span><br>
+          <strong><i class="fa-solid fa-location-dot"></i> Delivery Address:</strong> <span id="recAddress">Flat 402, Green Valley, Bengaluru</span>
+        </div>
+      </div>
+
+      <!-- Itemized Table -->
+      <table class="receipt-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Pack</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="receiptTableBody">
+          <!-- Injected via profile.js -->
+        </tbody>
+      </table>
+
+      <!-- Cost Breakdown -->
+      <div class="receipt-summary-box">
+        <div class="receipt-summary-row">
+          <span>Subtotal:</span>
+          <span>₹<span id="recSubtotal">0</span></span>
+        </div>
+        <div class="receipt-summary-row">
+          <span>Delivery Fee:</span>
+          <span id="recDeliveryFee">FREE</span>
+        </div>
+        <div class="receipt-summary-row">
+          <span>Taxes (5% GST):</span>
+          <span>₹<span id="recTax">0</span></span>
+        </div>
+        <div class="receipt-summary-row total-row">
+          <span>Total Paid:</span>
+          <span>₹<span id="recTotal">0</span></span>
+        </div>
+      </div>
+
+      <div class="receipt-actions">
+        <button type="button" class="btn-order-action btn-receipt" onclick="window.print()">
+          <i class="fa-solid fa-print"></i> Print Invoice
+        </button>
+        <button type="button" class="btn-order-action btn-reorder" onclick="closeReceiptModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ADD / EDIT ADDRESS MODAL ================= -->
+  <div class="modal-overlay" id="addressModal">
+    <div class="address-modal-card">
+      <div class="receipt-header" style="margin-bottom: 15px;">
+        <h3 id="addressModalTitle">Add Delivery Address</h3>
+        <button type="button" class="receipt-close-btn" onclick="closeAddressModal()">&times;</button>
+      </div>
+
+      <form id="addressForm" onsubmit="handleSaveAddress(event)">
+        <input type="hidden" id="editAddressIndex" value="-1" />
+
+        <div class="profile-form-grid" style="gap: 14px;">
+          <div class="profile-form-group">
+            <label for="addrRecipientName">Full Name</label>
+            <input type="text" id="addrRecipientName" required />
+          </div>
+
+          <div class="profile-form-group">
+            <label for="addrPhone">Phone Number</label>
+            <input type="tel" id="addrPhone" maxlength="10" required />
+          </div>
+
+          <div class="profile-form-group full-width">
+            <label for="addrHouse">House / Flat / Building</label>
+            <input type="text" id="addrHouse" required />
+          </div>
+
+          <div class="profile-form-group full-width">
+            <label for="addrStreet">Street / Area / Locality</label>
+            <input type="text" id="addrStreet" required />
+          </div>
+
+          <div class="profile-form-group">
+            <label for="addrCity">City</label>
+            <input type="text" id="addrCity" required />
+          </div>
+
+          <div class="profile-form-group">
+            <label for="addrPincode">Pincode</label>
+            <input type="text" id="addrPincode" maxlength="6" required />
+          </div>
+
+          <div class="profile-form-group full-width">
+            <label for="addrType">Address Type</label>
+            <select id="addrType">
+              <option value="Home">Home</option>
+              <option value="Work">Work / Office</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 15px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="addrIsDefault" />
+          <label for="addrIsDefault" style="font-size: 13px; color: #374151;">Set as default delivery address</label>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn-order-action btn-receipt" onclick="closeAddressModal()">Cancel</button>
+          <button type="submit" class="btn-order-action btn-reorder">Save Address</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Storewide Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <img src="../images/logo.jpeg" alt="FreshMart Logo" />
+          Fresh<span>Mart</span>
+        </a>
+        <p class="footer-desc">
+          FreshMart is your trusted neighborhood online grocery store delivering fresh farm vegetables, crisp fruits, organic dairy, and pantry staples in under 2 hours.
+        </p>
+        <div class="footer-social-links">
+          <a href="javascript:void(0)" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Top Categories</h4>
+        <ul class="footer-links-list">
+          <li><a href="products.html?cat=vegetables"><i class="fa-solid fa-chevron-right"></i> Fresh Vegetables</a></li>
+          <li><a href="products.html?cat=fruits"><i class="fa-solid fa-chevron-right"></i> Juicy Fruits</a></li>
+          <li><a href="products.html?cat=dairy"><i class="fa-solid fa-chevron-right"></i> Farm Dairy & Milk</a></li>
+          <li><a href="products.html?cat=bakery"><i class="fa-solid fa-chevron-right"></i> Bakery & Breads</a></li>
+          <li><a href="products.html?cat=organic"><i class="fa-solid fa-chevron-right"></i> Organic Staples</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Care</h4>
+        <ul class="footer-links-list">
+          <li><a href="profile.html"><i class="fa-solid fa-chevron-right"></i> My Account & Orders</a></li>
+          <li><a href="cart.html"><i class="fa-solid fa-chevron-right"></i> View Cart & Checkout</a></li>
+          <li><a href="javascript:void(0)" onclick="openPincodeModal()"><i class="fa-solid fa-chevron-right"></i> Delivery Areas & Pincode</a></li>
+          <li><a href="products.html"><i class="fa-solid fa-chevron-right"></i> Special Offers & Deals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <strong>1800-FRESHMART (Toll-Free)</strong>
+            <span>7:00 AM - 10:00 PM (All 7 Days)</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <strong>support@freshmart.in</strong>
+            <span>Quick response within 1 hour</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>FreshMart Superstores Ltd.</strong>
+            <span>Bengaluru, Karnataka, India</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div>
+          &copy; 2026 FreshMart Grocery Store. All Rights Reserved. Delivered Fresh & Fast.
+        </div>
+        <div class="payment-badges-row">
+          <span>100% Safe Payments:</span>
+          <i class="fa-brands fa-google-pay" title="UPI GPay"></i>
+          <i class="fa-brands fa-cc-visa" title="Visa"></i>
+          <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+          <i class="fa-solid fa-money-bill-wave" title="Cash on Delivery"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,715 @@
+/* ================= CHECKOUT PAGE STYLING ================= */
+
+.checkout-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px 60px 20px;
+}
+
+.checkout-page-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkout-page-title i {
+  color: var(--primary-color, #10b981);
+}
+
+/* Two-column layout */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Step Card Styles */
+.checkout-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: box-shadow 0.2s ease;
+}
+
+.checkout-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.checkout-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.step-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-color, #10b981);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.checkout-card-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* ================= 1. SHIPPING ADDRESS FORM ================= */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group label .required {
+  color: #ef4444;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #fafafa;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--primary-color, #10b981);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.field-error {
+  font-size: 12px;
+  color: #ef4444;
+  display: none;
+  margin-top: 2px;
+}
+
+/* Address Type Pills */
+.address-type-selector {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.address-type-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.address-type-btn:hover {
+  border-color: #9ca3af;
+}
+
+.address-type-btn.active {
+  background-color: #ecfdf5;
+  border-color: var(--primary-color, #10b981);
+  color: #065f46;
+}
+
+/* ================= 2. DELIVERY SLOT PICKER ================= */
+.date-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.date-pill {
+  flex: 1;
+  min-width: 110px;
+  padding: 12px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.date-pill:hover {
+  border-color: #9ca3af;
+}
+
+.date-pill.active {
+  border-color: var(--primary-color, #10b981);
+  background-color: #ecfdf5;
+}
+
+.date-pill .day-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  display: block;
+}
+
+.date-pill .day-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.date-pill.active .day-title {
+  color: #065f46;
+}
+
+/* Time Slot Cards */
+.slots-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.slot-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slot-card:hover {
+  border-color: #9ca3af;
+}
+
+.slot-card.active {
+  border-color: var(--primary-color, #10b981);
+  background-color: #ecfdf5;
+}
+
+.slot-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+.slot-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slot-info i {
+  color: #0d5c52;
+  font-size: 16px;
+}
+
+.slot-time {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.slot-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+/* ================= 3. SUBSTITUTION PREFERENCE ================= */
+.substitution-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sub-option-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #ffffff;
+  transition: all 0.2s;
+}
+
+.sub-option-card:hover {
+  border-color: #9ca3af;
+}
+
+.sub-option-card.active {
+  border-color: var(--primary-color, #10b981);
+  background-color: #ecfdf5;
+}
+
+.sub-option-card input[type="radio"] {
+  margin-top: 3px;
+  accent-color: var(--primary-color, #10b981);
+}
+
+.sub-text strong {
+  font-size: 14px;
+  color: #111827;
+  display: block;
+}
+
+.sub-text p {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.sub-checkbox-group {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.sub-checkbox-group input {
+  accent-color: var(--primary-color, #10b981);
+}
+
+/* ================= 4. PAYMENT METHOD SELECTOR ================= */
+.payment-methods-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.payment-method-option:hover {
+  border-color: #9ca3af;
+}
+
+.payment-method-option.active {
+  border-color: var(--primary-color, #10b981);
+  background-color: #ecfdf5;
+}
+
+.payment-option-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.payment-option-left input[type="radio"] {
+  accent-color: var(--primary-color, #10b981);
+}
+
+.payment-option-left label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+  cursor: pointer;
+}
+
+.payment-icons {
+  display: flex;
+  gap: 8px;
+  font-size: 18px;
+  color: #6b7280;
+}
+
+/* Dynamic Payment Detail Fields */
+.payment-detail-box {
+  background-color: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 15px;
+}
+
+.cod-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #065f46;
+  font-size: 13px;
+}
+
+.cod-info i {
+  font-size: 24px;
+  color: #10b981;
+}
+
+.upi-box, .card-box, .netbanking-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.upi-apps {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.upi-app-btn {
+  padding: 6px 12px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+}
+
+.upi-app-btn:hover {
+  background: #f3f4f6;
+}
+
+/* ================= 5. ORDER SUMMARY SIDEBAR ================= */
+.checkout-summary-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  position: sticky;
+  top: 20px;
+}
+
+.checkout-summary-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Mini Item List */
+.summary-items-list {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding-right: 4px;
+}
+
+.summary-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.summary-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary-item-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #f3f4f6;
+}
+
+.summary-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+.summary-item-qty {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.summary-item-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Summary Calculations */
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.calc-row.total-row {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1.5px solid #e5e7eb;
+}
+
+.calc-row .free-tag {
+  color: #10b981;
+  font-weight: 700;
+}
+
+/* Selected Details Quick Preview in Sidebar */
+.slot-preview-box {
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 16px 0;
+  font-size: 12px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slot-preview-box i {
+  color: #0d5c52;
+}
+
+/* Big Place Order Button */
+.btn-place-order {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--primary-color, #10b981);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+  transition: all 0.2s;
+}
+
+.btn-place-order:hover {
+  background-color: var(--primary-hover, #059669);
+  transform: translateY(-1px);
+}
+
+.btn-place-order:active {
+  transform: translateY(0);
+}
+
+.btn-place-order:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.safe-checkout-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 12px;
+}
+
+/* ================= 6. ORDER CONFIRMATION MODAL ================= */
+.order-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.order-modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  padding: 32px 28px;
+  text-align: center;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25);
+  animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.success-icon-circle {
+  width: 70px;
+  height: 70px;
+  background-color: #ecfdf5;
+  color: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 16px auto;
+  border: 4px solid #a7f3d0;
+}
+
+.order-modal-card h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.order-id-pill {
+  display: inline-block;
+  background: #f3f4f6;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  color: #0d5c52;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.order-detail-summary-box {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: left;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+
+.order-detail-summary-box div {
+  margin-bottom: 8px;
+}
+
+.order-detail-summary-box div:last-child {
+  margin-bottom: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-btn-primary {
+  flex: 1;
+  padding: 12px;
+  background-color: var(--primary-color, #10b981);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.modal-btn-secondary {
+  flex: 1;
+  padding: 12px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+  .checkout-summary-card {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .slots-grid {
+    grid-template-columns: 1fr;
+  }
+  .date-selector {
+    flex-wrap: nowrap;
+  }
+  .modal-actions {
+    flex-direction: column;
+  }
+}

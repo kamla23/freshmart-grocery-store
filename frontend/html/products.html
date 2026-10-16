@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Groceries - FreshMart</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/products.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Unified Header Navigation -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="../images/logo.jpeg" alt="FreshMart Logo" class="logo-img" />
+        Fresh<span class="logo-highlight">Mart</span>
+      </a>
+    </div>
+
+    <!-- Location / Pincode Picker -->
+    <div class="location-picker-box">
+      <i class="fa-solid fa-location-dot location-icon"></i>
+      <div class="location-info">
+        <span class="location-label">Deliver to</span>
+        <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()">
+          <span id="currentPincode">Select Pincode</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search fresh vegetables, fruits, milk..." />
+      <button type="button" id="searchBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox" />
+    <label for="menu-toggle" class="hamburger-btn">
+      <i class="fa-solid fa-bars"></i>
+    </label>
+
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="products.html" class="nav-item active">Groceries</a>
+      <a href="cart.html" class="cart-btn" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+      <a href="login.html" id="userAuthBtn" class="user-link">
+        <i class="fa-regular fa-user"></i>
+        <span>Login</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Pincode Modal Popup -->
+  <div class="pincode-modal" id="pincodeModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closePincodeModal()">&times;</span>
+      <h3>Enter Delivery Pincode</h3>
+      <p>Check product availability and delivery time</p>
+      <div class="pincode-input-group">
+        <input type="text" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit Pincode" />
+        <button type="button" onclick="savePincode()">Apply</button>
+      </div>
+      <span class="pincode-msg" id="pincodeMsg"></span>
+    </div>
+  </div>
+
+  <!-- Main Products Layout -->
+  <main class="products-page-container">
+    
+    <!-- Sidebar Filters -->
+    <aside class="sidebar-filters">
+      <h3>Filters</h3>
+      
+      <div class="filter-group">
+        <h4>Categories</h4>
+        <label><input type="checkbox" class="cat-filter" value="Vegetables" onchange="applyFilters()"> Vegetables</label>
+        <label><input type="checkbox" class="cat-filter" value="Fruits" onchange="applyFilters()"> Fruits</label>
+        <label><input type="checkbox" class="cat-filter" value="Dairy" onchange="applyFilters()"> Dairy</label>
+        <label><input type="checkbox" class="cat-filter" value="Bakery" onchange="applyFilters()"> Bakery</label>
+        <label><input type="checkbox" class="cat-filter" value="Organic" onchange="applyFilters()"> Organic Essentials</label>
+      </div>
+
+      <div class="filter-group">
+        <h4>Max Price: ₹<span id="priceValue">300</span></h4>
+        <input type="range" id="priceRange" min="20" max="300" value="300" oninput="updatePriceLabel(this.value)" onchange="applyFilters()">
+      </div>
+
+      <div class="filter-group">
+        <h4>Dietary Preference</h4>
+        <label><input type="checkbox" class="tag-filter" value="Organic" onchange="applyFilters()"> Organic</label>
+        <label><input type="checkbox" class="tag-filter" value="Vegan" onchange="applyFilters()"> Vegan</label>
+      </div>
+    </aside>
+
+    <!-- Products Content Area -->
+    <section class="products-content">
+      <div class="products-sort-header">
+        <p><span id="productCount">0</span> Products Found</p>
+        <div class="sort-box">
+          <label for="sortSelect">Sort By:</label>
+          <select id="sortSelect" onchange="applyFilters()">
+            <option value="default">Featured</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="products-grid" id="listingGrid">
+
+        <!-- Product 1 -->
+        <div class="product-card" data-id="201">
+          <div class="product-img-box">
+            <a href="product-detail.html"><img src="../images/vagetables.jpeg" alt="Organic Spinach"></a>
+          </div>
+          <div class="product-info">
+            <span class="product-cat">Vegetables</span>
+            <h3 class="product-title"><a href="product-detail.html">Organic Spinach</a> <span class="weight-tag">250g</span></h3>
+            <div class="product-price">
+              <span class="current-price">₹30</span>
+            </div>
+            <div class="cart-action-container">
+              <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 201)">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+              <div class="qty-counter-box hidden">
+                <button type="button" class="qty-btn" onclick="updateQty(201, -1, this)">-</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn" onclick="updateQty(201, 1, this)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card" data-id="202">
+          <div class="product-img-box">
+            <img src="../images/fruits2.jpeg" alt="Fresh Red Apples">
+          </div>
+          <div class="product-info">
+            <span class="product-cat">Fruits</span>
+            <h3 class="product-title">Fresh Red Apples <span class="weight-tag">1kg</span></h3>
+            <div class="product-price">
+              <span class="current-price">₹160</span>
+            </div>
+            <div class="cart-action-container">
+              <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 202)">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+              <div class="qty-counter-box hidden">
+                <button type="button" class="qty-btn" onclick="updateQty(202, -1, this)">-</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn" onclick="updateQty(202, 1, this)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card" data-id="203">
+          <div class="product-img-box">
+            <img src="../images/pure1.jpg" alt="Organic Whole Milk">
+          </div>
+          <div class="product-info">
+            <span class="product-cat">Dairy</span>
+            <h3 class="product-title">Organic Whole Milk <span class="weight-tag">1L</span></h3>
+            <div class="product-price">
+              <span class="current-price">₹65</span>
+            </div>
+            <div class="cart-action-container">
+              <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 203)">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+              <div class="qty-counter-box hidden">
+                <button type="button" class="qty-btn" onclick="updateQty(203, -1, this)">-</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn" onclick="updateQty(203, 1, this)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4: Bakery -->
+        <div class="product-card" data-id="204">
+          <div class="product-img-box">
+            <img src="../images/bread.jpeg" alt="Whole Wheat Bread">
+          </div>
+          <div class="product-info">
+            <span class="product-cat">Bakery</span>
+            <h3 class="product-title">Whole Wheat Bread <span class="weight-tag">400g</span></h3>
+            <div class="product-price">
+              <span class="current-price">₹45</span>
+            </div>
+            <div class="cart-action-container">
+              <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 204)">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+              <div class="qty-counter-box hidden">
+                <button type="button" class="qty-btn" onclick="updateQty(204, -1, this)">-</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn" onclick="updateQty(204, 1, this)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 5: Fruits -->
+        <div class="product-card" data-id="205">
+          <div class="product-img-box">
+            <img src="../images/fruit1.jpeg" alt="Juicy Oranges">
+          </div>
+          <div class="product-info">
+            <span class="product-cat">Fruits</span>
+            <h3 class="product-title">Fresh Oranges <span class="weight-tag">1kg</span></h3>
+            <div class="product-price">
+              <span class="current-price">₹90</span>
+            </div>
+            <div class="cart-action-container">
+              <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 205)">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+              <div class="qty-counter-box hidden">
+                <button type="button" class="qty-btn" onclick="updateQty(205, -1, this)">-</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn" onclick="updateQty(205, 1, this)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 6: Organic Honey -->
+        <div class="product-card" data-id="206">
+          <div class="product-img-box">
+            <img src="../images/oil.jpeg" alt="Pure Natural Honey">
+          </div>
+          <div class="product-info">
+            <span class="product-cat">Organic</span>
+            <h3 class="product-title">Pure Natural Honey <span class="weight-tag">500g</span></h3>
+            <div class="product-price">
+              <span class="current-price">₹220</span>
+            </div>
+            <div class="cart-action-container">
+              <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 206)">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+              <div class="qty-counter-box hidden">
+                <button type="button" class="qty-btn" onclick="updateQty(206, -1, this)">-</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn" onclick="updateQty(206, 1, this)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Storewide Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <img src="../images/logo.jpeg" alt="FreshMart Logo" />
+          Fresh<span>Mart</span>
+        </a>
+        <p class="footer-desc">
+          FreshMart is your trusted neighborhood online grocery store delivering fresh farm vegetables, crisp fruits, organic dairy, and pantry staples in under 2 hours.
+        </p>
+        <div class="footer-social-links">
+          <a href="javascript:void(0)" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Top Categories</h4>
+        <ul class="footer-links-list">
+          <li><a href="products.html?cat=vegetables"><i class="fa-solid fa-chevron-right"></i> Fresh Vegetables</a></li>
+          <li><a href="products.html?cat=fruits"><i class="fa-solid fa-chevron-right"></i> Juicy Fruits</a></li>
+          <li><a href="products.html?cat=dairy"><i class="fa-solid fa-chevron-right"></i> Farm Dairy & Milk</a></li>
+          <li><a href="products.html?cat=bakery"><i class="fa-solid fa-chevron-right"></i> Bakery & Breads</a></li>
+          <li><a href="products.html?cat=organic"><i class="fa-solid fa-chevron-right"></i> Organic Staples</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Care</h4>
+        <ul class="footer-links-list">
+          <li><a href="profile.html"><i class="fa-solid fa-chevron-right"></i> My Account & Orders</a></li>
+          <li><a href="cart.html"><i class="fa-solid fa-chevron-right"></i> View Cart & Checkout</a></li>
+          <li><a href="javascript:void(0)" onclick="openPincodeModal()"><i class="fa-solid fa-chevron-right"></i> Delivery Areas & Pincode</a></li>
+          <li><a href="products.html"><i class="fa-solid fa-chevron-right"></i> Special Offers & Deals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <strong>1800-FRESHMART (Toll-Free)</strong>
+            <span>7:00 AM - 10:00 PM (All 7 Days)</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <strong>support@freshmart.in</strong>
+            <span>Quick response within 1 hour</span>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>FreshMart Superstores Ltd.</strong>
+            <span>Bengaluru, Karnataka, India</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div>
+          &copy; 2026 FreshMart Grocery Store. All Rights Reserved. Delivered Fresh & Fast.
+        </div>
+        <div class="payment-badges-row">
+          <span>100% Safe Payments:</span>
+          <i class="fa-brands fa-google-pay" title="UPI GPay"></i>
+          <i class="fa-brands fa-cc-visa" title="Visa"></i>
+          <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+          <i class="fa-solid fa-money-bill-wave" title="Cash on Delivery"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/products.js"></script>
+</body>
+</html>

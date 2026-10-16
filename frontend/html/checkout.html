@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secure Checkout & Slot Booking - FreshMart</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/checkout.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Unified Header Navigation -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="../images/logo.jpeg" alt="FreshMart Logo" class="logo-img" />
+        Fresh<span class="logo-highlight">Mart</span>
+      </a>
+    </div>
+
+    <!-- Location / Pincode Picker -->
+    <div class="location-picker-box">
+      <i class="fa-solid fa-location-dot location-icon"></i>
+      <div class="location-info">
+        <span class="location-label">Deliver to</span>
+        <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()">
+          <span id="currentPincode">Select Pincode</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search fresh vegetables, fruits, milk..." />
+      <button type="button" id="searchBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox" />
+    <label for="menu-toggle" class="hamburger-btn">
+      <i class="fa-solid fa-bars"></i>
+    </label>
+
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="products.html" class="nav-item">Groceries</a>
+      <a href="cart.html" class="cart-btn" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+      <a href="login.html" id="userAuthBtn" class="user-link">
+        <i class="fa-regular fa-user"></i>
+        <span>Login</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Pincode Modal Popup -->
+  <div class="pincode-modal" id="pincodeModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closePincodeModal()">&times;</span>
+      <h3>Enter Delivery Pincode</h3>
+      <p>Check product availability and delivery time</p>
+      <div class="pincode-input-group">
+        <input type="text" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit Pincode" />
+        <button type="button" onclick="savePincode()">Apply</button>
+      </div>
+      <span class="pincode-msg" id="pincodeMsg"></span>
+    </div>
+  </div>
+
+  <!-- Main Checkout Container -->
+  <main class="checkout-container">
+    <h1 class="checkout-page-title">
+      <i class="fa-solid fa-lock"></i> Checkout & Slot Booking
+    </h1>
+
+    <div class="checkout-layout">
+      
+      <!-- Left Column: Multi-Step Forms -->
+      <div class="checkout-steps-col">
+        
+        <!-- STEP 1: Shipping Address Form -->
+        <section class="checkout-card" id="stepAddress">
+          <div class="checkout-card-header">
+            <span class="step-badge">1</span>
+            <h3>Delivery & Shipping Address</h3>
+          </div>
+
+          <form id="shippingForm" onsubmit="return false;" novalidate>
+            <div class="form-grid">
+              
+              <div class="form-group">
+                <label for="fullName">Full Name <span class="required">*</span></label>
+                <input type="text" id="fullName" placeholder="e.g. Rahul Sharma" required />
+                <span class="field-error" id="nameError">Please enter your full name.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="phoneNumber">Mobile Number <span class="required">*</span></label>
+                <input type="tel" id="phoneNumber" maxlength="10" placeholder="10-digit phone number" required />
+                <span class="field-error" id="phoneError">Please enter a valid 10-digit mobile number.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="houseNumber">Flat / House No. / Building <span class="required">*</span></label>
+                <input type="text" id="houseNumber" placeholder="e.g. Flat 402, Green Valley Apts" required />
+                <span class="field-error" id="houseError">House / Flat number is required.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="streetAddress">Street / Area / Locality <span class="required">*</span></label>
+                <input type="text" id="streetAddress" placeholder="e.g. MG Road, Indiranagar" required />
+                <span class="field-error" id="streetError">Street address is required.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="city">City <span class="required">*</span></label>
+                <input type="text" id="city" placeholder="e.g. Bengaluru" value="Bengaluru" required />
+                <span class="field-error" id="cityError">City is required.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="pincode">Pincode <span class="required">*</span></label>
+                <input type="text" id="pincode" maxlength="6" placeholder="6-digit pincode" required />
+                <span class="field-error" id="pincodeFieldError">Please enter a valid 6-digit Pincode.</span>
+              </div>
+
+              <div class="form-group full-width">
+                <label>Save Address As</label>
+                <div class="address-type-selector">
+                  <button type="button" class="address-type-btn active" data-type="Home" onclick="selectAddressType(this)">
+                    <i class="fa-solid fa-house"></i> Home
+                  </button>
+                  <button type="button" class="address-type-btn" data-type="Work" onclick="selectAddressType(this)">
+                    <i class="fa-solid fa-briefcase"></i> Work / Office
+                  </button>
+                  <button type="button" class="address-type-btn" data-type="Other" onclick="selectAddressType(this)">
+                    <i class="fa-solid fa-location-dot"></i> Other
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </section>
+
+        <!-- STEP 2: Delivery Slot Picker -->
+        <section class="checkout-card" id="stepSlot">
+          <div class="checkout-card-header">
+            <span class="step-badge">2</span>
+            <h3>Select Delivery Slot</h3>
+          </div>
+
+          <!-- Date Selector Tabs -->
+          <div class="date-selector" id="dateSelector">
+            <div class="date-pill active" data-date="Today" onclick="selectDeliveryDate(this, 'Today')">
+              <span class="day-title">Today</span>
+              <span class="day-sub" id="dateLabelToday">03 Sep</span>
+            </div>
+            <div class="date-pill" data-date="Tomorrow" onclick="selectDeliveryDate(this, 'Tomorrow')">
+              <span class="day-title">Tomorrow</span>
+              <span class="day-sub" id="dateLabelTomorrow">04 Sep</span>
+            </div>
+            <div class="date-pill" data-date="DayAfter" onclick="selectDeliveryDate(this, 'DayAfter')">
+              <span class="day-title" id="dayAfterDayName">Friday</span>
+              <span class="day-sub" id="dateLabelDayAfter">05 Sep</span>
+            </div>
+          </div>
+
+          <!-- Time Window Slot Cards -->
+          <div class="slots-grid" id="slotsGrid">
+            
+            <div class="slot-card" data-slot="7 AM - 9 AM" onclick="selectTimeSlot(this)">
+              <div class="slot-info">
+                <i class="fa-regular fa-clock"></i>
+                <span class="slot-time">7:00 AM - 9:00 AM</span>
+              </div>
+              <span class="slot-badge">Morning</span>
+            </div>
+
+            <div class="slot-card" data-slot="1 PM - 3 PM" onclick="selectTimeSlot(this)">
+              <div class="slot-info">
+                <i class="fa-regular fa-clock"></i>
+                <span class="slot-time">1:00 PM - 3:00 PM</span>
+              </div>
+              <span class="slot-badge">Afternoon</span>
+            </div>
+
+            <div class="slot-card active" data-slot="5 PM - 7 PM" onclick="selectTimeSlot(this)">
+              <div class="slot-info">
+                <i class="fa-regular fa-clock"></i>
+                <span class="slot-time">5:00 PM - 7:00 PM</span>
+              </div>
+              <span class="slot-badge">Popular</span>
+            </div>
+
+            <div class="slot-card" data-slot="8 PM - 10 PM" onclick="selectTimeSlot(this)">
+              <div class="slot-info">
+                <i class="fa-regular fa-clock"></i>
+                <span class="slot-time">8:00 PM - 10:00 PM</span>
+              </div>
+              <span class="slot-badge">Night</span>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- STEP 3: Item Substitution Preference -->
+        <section class="checkout-card" id="stepSubstitution">
+          <div class="checkout-card-header">
+            <span class="step-badge">3</span>
+            <h3>Item Substitution Preference</h3>
+          </div>
+
+          <div class="substitution-options">
+            
+            <label class="sub-option-card active" onclick="selectSubstitution(this)">
+              <input type="radio" name="substitution" value="replace" checked />
+              <div class="sub-text">
+                <strong><i class="fa-solid fa-arrows-rotate" style="color: #10b981; margin-right: 6px;"></i> Replace with nearest brand / similar item</strong>
+                <p>Our picker will select the freshest, highest quality equivalent product so your delivery isn't delayed.</p>
+              </div>
+            </label>
+
+            <label class="sub-option-card" onclick="selectSubstitution(this)">
+              <input type="radio" name="substitution" value="refund" />
+              <div class="sub-text">
+                <strong><i class="fa-solid fa-wallet" style="color: #0369a1; margin-right: 6px;"></i> Refund me directly if out of stock</strong>
+                <p>Do not substitute. We will instantly refund the item amount back to your original payment method / wallet.</p>
+              </div>
+            </label>
+
+          </div>
+
+          <div class="sub-checkbox-group">
+            <input type="checkbox" id="callBeforeReplace" checked />
+            <label for="callBeforeReplace">Call me before making any substitution</label>
+          </div>
+        </section>
+
+        <!-- STEP 4: Payment Method Selector -->
+        <section class="checkout-card" id="stepPayment">
+          <div class="checkout-card-header">
+            <span class="step-badge">4</span>
+            <h3>Payment Method</h3>
+          </div>
+
+          <div class="payment-methods-tabs">
+            
+            <!-- Cash on Delivery -->
+            <div class="payment-method-option active" data-method="COD" onclick="selectPaymentMethod('COD', this)">
+              <div class="payment-option-left">
+                <input type="radio" name="paymentMethod" id="payCOD" value="COD" checked />
+                <label for="payCOD">Cash on Delivery (COD)</label>
+              </div>
+              <div class="payment-icons">
+                <i class="fa-solid fa-money-bill-wave"></i>
+              </div>
+            </div>
+
+            <!-- UPI Online -->
+            <div class="payment-method-option" data-method="UPI" onclick="selectPaymentMethod('UPI', this)">
+              <div class="payment-option-left">
+                <input type="radio" name="paymentMethod" id="payUPI" value="UPI" />
+                <label for="payUPI">UPI (Google Pay / PhonePe / Paytm)</label>
+              </div>
+              <div class="payment-icons">
+                <i class="fa-brands fa-google-pay"></i>
+                <i class="fa-solid fa-qrcode"></i>
+              </div>
+            </div>
+
+            <!-- Credit / Debit Card -->
+            <div class="payment-method-option" data-method="CARD" onclick="selectPaymentMethod('CARD', this)">
+              <div class="payment-option-left">
+                <input type="radio" name="paymentMethod" id="payCard" value="CARD" />
+                <label for="payCard">Credit / Debit Card</label>
+              </div>
+              <div class="payment-icons">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dynamic Payment Details Container -->
+          <div class="payment-detail-box" id="paymentDetailBox">
+            <!-- COD Content (Default) -->
+            <div class="cod-info" id="codContent">
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>Pay at doorstep</strong>
+                <p>Pay with Cash or scan Delivery Partner's QR Code using any UPI app upon delivery.</p>
+              </div>
+            </div>
+
+            <!-- UPI Content (Hidden by default) -->
+            <div class="upi-box hidden" id="upiContent">
+              <div class="form-group">
+                <label>Choose UPI App or Enter ID</label>
+                <div class="upi-apps">
+                  <button type="button" class="upi-app-btn" onclick="fillUpiApp('gpay')"><i class="fa-brands fa-google"></i> Google Pay</button>
+                  <button type="button" class="upi-app-btn" onclick="fillUpiApp('phonepe')">PhonePe</button>
+                  <button type="button" class="upi-app-btn" onclick="fillUpiApp('paytm')">Paytm</button>
+                </div>
+                <input type="text" id="upiIdInput" placeholder="username@okhdfcbank or 9876543210@paytm" />
+              </div>
+            </div>
+
+            <!-- Card Content (Hidden by default) -->
+            <div class="card-box hidden" id="cardContent">
+              <div class="form-group">
+                <label>Card Number</label>
+                <input type="text" id="cardNumberInput" maxlength="19" placeholder="1234 5678 9012 3456" />
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Expiry Date</label>
+                  <input type="text" id="cardExpiryInput" maxlength="5" placeholder="MM/YY" />
+                </div>
+                <div class="form-group">
+                  <label>CVV</label>
+                  <input type="password" id="cardCvvInput" maxlength="4" placeholder="123" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Order Summary Sidebar -->
+      <aside class="checkout-summary-col">
+        <div class="checkout-summary-card">
+          <h3>Order Review (<span id="checkoutItemCount">0</span> Items)</h3>
+
+          <!-- Mini Scrollable Item List -->
+          <div class="summary-items-list" id="summaryItemsList">
+            <!-- Items injected via checkout.js -->
+          </div>
+
+          <!-- Quick Slot Preview -->
+          <div class="slot-preview-box">
+            <i class="fa-solid fa-truck-fast"></i>
+            <div>
+              <span id="previewSlotText">Today: 5:00 PM - 7:00 PM</span>
+            </div>
+          </div>
+
+          <!-- Bill Calculation Breakdown -->
+          <div class="calc-row">
+            <span>Item Subtotal</span>
+            <span>₹<span id="checkoutSubtotal">0</span></span>
+          </div>
+
+          <div class="calc-row">
+            <span>Delivery Fee</span>
+            <span id="checkoutDeliveryFee">₹30</span>
+          </div>
+
+          <div class="calc-row">
+            <span>Estimated Taxes (5% GST)</span>
+            <span>₹<span id="checkoutTax">0</span></span>
+          </div>
+
+          <div class="calc-row total-row">
+            <span>Total Payable</span>
+            <span>₹<span id="checkoutTotalPay">0</span></span>
+          </div>
+
+          <!-- Place Order CTA Button -->
+          <button type="button" class="btn-place-order" id="btnPlaceOrder" onclick="handlePlaceOrder()">
+            <i class="fa-solid fa-shield-check"></i> Place Order (₹<span id="btnPayAmount">0</span>)
+          </button>
+
+          <div class="safe-checkout-note">
+            <i class="fa-solid fa-shield"></i> 100% Safe & Secure Grocery Checkout
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Order Confirmation Modal -->
+  <div class="order-modal-overlay" id="orderConfirmModal">
+    <div class="order-modal-card">
+      <div class="success-icon-circle">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h2>Order Placed Successfully!</h2>
+      <p style="color: #6b7280; font-size: 14px; margin-bottom: 8px;">Thank you for shopping with FreshMart</p>
+      
+      <div class="order-id-pill" id="modalOrderId">Order #FM-100234</div>
+
+      <div class="order-detail-summary-box">
+        <div><strong><i class="fa-regular fa-clock" style="color:#0d5c52;"></i> Delivery Slot:</strong> <span id="modalSlot">Today, 5:00 PM - 7:00 PM</span></div>
+        <div><strong><i class="fa-solid fa-location-dot" style="color:#0d5c52;"></i> Deliver To:</strong> <span id="modalAddress">Bengaluru</span></div>
+        <div><strong><i class="fa-solid fa-credit-card" style="color:#0d5c52;"></i> Payment:</strong> <span id="modalPayment">Cash on Delivery</span></div>
+        <div><strong><i class="fa-solid fa-receipt" style="color:#0d5c52;"></i> Amount:</strong> ₹<span id="modalAmount">0</span></div>
+      </div>
+
+      <div class="modal-actions">
+        <a href="index.html" class="modal-btn-primary">Continue Shopping</a>
+        <a href="products.html" class="modal-btn-secondary">Explore More</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/checkout.js"></script>
+</body>
+</html>

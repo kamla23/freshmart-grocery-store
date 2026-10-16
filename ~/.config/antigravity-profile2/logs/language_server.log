@@ -1,0 +1,30 @@
+I0907 12:11:08.092727 27207 server.go:1293] Starting language server process with pid 27207
+I0907 12:11:08.093695 27207 server.go:330] Setting GOMAXPROCS to 4
+I0907 12:11:08.094057 27207 server.go:473] Language server will attempt to listen on host localhost
+I0907 12:11:08.095269 27207 server.go:487] Language server listening on random port at 38071 for HTTPS (gRPC)
+I0907 12:11:08.095388 27207 server.go:494] Language server listening on random port at 34909 for HTTP
+I0907 12:11:08.637249 27207 auth_provider.go:546] [AuthProvider] SetProjectID called with projectID: ""
+I0907 12:11:08.637292 27207 auth_provider.go:554] [AuthProvider] SetLocation called with location: ""
+W0907 12:11:08.655541 27207 launchmanager.go:68] Entering local chrome mode! This is WRONG unless you are running tests or in eval mode on Linux.
+I0907 12:11:11.112382 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x8927a776e9c7cd74
+I0907 12:11:11.372850 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0xc709e03d4e732e45
+E0907 12:11:11.661574 27207 log.go:398] WaitForReady failed: context deadline exceeded
+I0907 12:11:11.663084 27207 server.go:2234] Auth succeeded, refreshing features and managers
+I0907 12:11:12.606208 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0x576f48d7935069f7
+I0907 12:11:12.616145 27207 server.go:2240] State refresh took 953ms
+I0907 12:11:12.616612 27207 server.go:2245] Retroactive projects migration enabled: true
+I0907 12:11:12.616694 27207 projects_migration.go:447] Projects migration already started or completed, skipping
+I0907 12:11:12.640813 27207 server.go:1111] Serving UI bundle from embedded assets
+I0907 12:11:12.647174 27207 server.go:1898] initialized server successfully in 4.554019048s
+I0907 12:17:10.278833 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0xa8675f4de0bcf1cc
+I0907 12:17:11.533428 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x2bc6c48fe8debd1c
+I0907 12:23:09.791883 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0xee857ce2f308cbcf
+I0907 12:23:10.953417 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0xdd90844709e6b2e
+I0907 12:29:10.391237 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0xae8b7bad60083c88
+I0907 12:29:11.667794 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0xcde229268e97ef4f
+I0907 12:35:10.737969 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0x229813310398af7f
+I0907 12:35:12.601402 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0xee49277ec5f42025
+I0907 12:41:09.854178 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0x8f75633050a3466d
+I0907 12:41:12.414926 27207 http_helpers.go:182] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x941ba9998aef2661
+I0907 12:44:32.625666 27207 server.go:2105] Got signal interrupt, shutting down
+I0907 12:44:32.625920 27207 server.go:2146] Language server shutting down
