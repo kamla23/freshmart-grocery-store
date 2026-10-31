@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard Overview - FreshMart</title>
+  <title>Admin Dashboard Overview - FreshMart Online Grocery</title>
+  <meta name="description" content="FreshMart Administrator Dashboard for monitoring store sales, order fulfillment, customer metrics, and low-stock inventory alerts." />
+  <meta name="theme-color" content="#10b981" />
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/admin-dashboard.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 </head>
 <body class="admin-body">
 
   <!-- Admin Topbar Navigation -->
   <header class="admin-topbar">
     <a href="admin-dashboard.html" class="admin-brand">
-      <img src="../images/logo.jpeg" alt="FreshMart Logo" class="admin-logo-img" />
+      <img src="../images/logo.webp" alt="FreshMart Logo" class="admin-logo-img" width="38" height="34" />
       <div class="admin-brand-title">Fresh<span>Mart</span></div>
       <span class="admin-badge">Admin Portal</span>
     </a>
 
     <div class="admin-top-right">
-      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront">
+      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront" aria-label="View Customer Storefront">
         <i class="fa-solid fa-store"></i> <span>View Store</span>
       </a>
 
@@ -31,7 +36,7 @@
         </div>
       </div>
 
-      <a href="admin-login.html" class="btn-view-store" title="Log Out" onclick="handleAdminLogout(event)">
+      <a href="admin-login.html" class="btn-view-store" title="Log Out" aria-label="Log Out of Admin Portal" onclick="handleAdminLogout(event)">
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </a>
     </div>
@@ -41,21 +46,21 @@
   <div class="admin-layout">
     
     <!-- Admin Sidebar Navigation -->
-    <aside class="admin-sidebar">
-      <button type="button" class="admin-nav-item active">
+    <aside class="admin-sidebar" aria-label="Admin Navigation Sidebar">
+      <button type="button" class="admin-nav-item active" aria-label="Dashboard Overview">
         <i class="fa-solid fa-chart-pie"></i> <span>Overview</span>
       </button>
-      <a href="admin-orders.html" class="admin-nav-item">
+      <a href="admin-orders.html" class="admin-nav-item" aria-label="Orders Management">
         <i class="fa-solid fa-boxes-packing"></i> <span>Orders</span>
       </a>
-      <a href="admin-products.html" class="admin-nav-item">
+      <a href="admin-products.html" class="admin-nav-item" aria-label="Inventory Management">
         <i class="fa-solid fa-warehouse"></i> <span>Inventory</span>
       </a>
-      <button type="button" class="admin-nav-item" onclick="alert('Customers list: 42 active registered users.')">
+      <button type="button" class="admin-nav-item" aria-label="Customers List" onclick="alert('Customers list: 42 active registered users.')">
         <i class="fa-solid fa-users"></i> <span>Customers</span>
       </button>
       <div class="admin-sidebar-divider"></div>
-      <a href="index.html" class="admin-nav-item">
+      <a href="index.html" class="admin-nav-item" aria-label="Exit to Customer Storefront">
         <i class="fa-solid fa-arrow-left"></i> <span>Exit to Store</span>
       </a>
     </aside>
@@ -71,6 +76,8 @@
           <span id="currentDateStr">Thursday, 03 Sep 2026</span>
         </div>
       </div>
+
+      <h2 class="sr-only">Key Performance Metrics</h2>
 
       <!-- ================= 1. KEY METRICS SUMMARY ================= -->
       <section class="metrics-grid">
@@ -116,7 +123,7 @@
           <div class="metric-info">
             <span class="metric-label">Low Stock Alerts</span>
             <span class="metric-value" id="metricLowStockCount">3</span>
-            <span class="metric-sub" style="color: #d97706;">
+            <span class="metric-sub" style="color: #92400e;">
               <span class="pulse-badge"></span> Needs Restocking
             </span>
           </div>
@@ -131,8 +138,8 @@
       <section class="low-stock-panel" id="lowStockSection">
         <div class="low-stock-header">
           <div class="low-stock-title">
-            <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i>
-            <span>Urgent: Low-Stock Grocery Items (&lt; 5 units remaining)</span>
+            <i class="fa-solid fa-triangle-exclamation" style="color: #92400e;"></i>
+            <h2 class="low-stock-heading">Urgent: Low-Stock Grocery Items (&lt; 5 units remaining)</h2>
           </div>
         </div>
         <div class="low-stock-items-row" id="lowStockItemsContainer">
@@ -145,7 +152,7 @@
         <div class="table-card-header">
           <h2>Recent Customer Orders (Latest 5)</h2>
           <div class="table-actions">
-            <span style="font-size: 13px; color: #6b7280;">Live Two-Way Status Sync</span>
+            <span style="font-size: 13px; color: #374151; font-weight: 500;">Live Two-Way Status Sync</span>
           </div>
         </div>
 
@@ -175,11 +182,11 @@
   </div>
 
   <!-- Admin Order Inspection Modal -->
-  <div class="admin-modal-overlay" id="adminOrderModal">
+  <div class="admin-modal-overlay" id="adminOrderModal" role="dialog" aria-modal="true" aria-labelledby="inspectModalTitle">
     <div class="admin-modal-card">
       <div class="admin-modal-header">
         <h3 id="inspectModalTitle">Order Inspection Details</h3>
-        <button type="button" class="admin-modal-close" onclick="closeAdminOrderModal()">&times;</button>
+        <button type="button" class="admin-modal-close" aria-label="Close inspection dialog" onclick="closeAdminOrderModal()">&times;</button>
       </div>
 
       <div class="receipt-meta-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: #f9fafb; padding: 14px; border-radius: 8px; font-size: 13px; margin-bottom: 20px;">
@@ -228,6 +235,7 @@
     <span id="toastText">Order status updated successfully!</span>
   </div>
 
+  <script src="../javascript/api.js"></script>
   <script src="../javascript/main.js"></script>
   <script src="../javascript/admin-dashboard.js"></script>
 </body>

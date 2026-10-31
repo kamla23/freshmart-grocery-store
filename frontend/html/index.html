@@ -4,24 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FreshMart - Online Grocery Store</title>
+    <meta
+      name="description"
+      content="FreshMart - Shop farm-fresh organic vegetables, crisp fruits, pure dairy, artisan breads, and daily groceries online with fast 2-hour home delivery."
+    />
+    <meta name="theme-color" content="#10b981" />
+
+    <!-- Performance Preloads -->
+    <link rel="preload" as="image" href="../images/banner1.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="../css/base.css" />
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/index.css" />
     <link rel="stylesheet" href="../css/footer.css" />
 
+    <!-- Defer Non-Critical Icon Stylesheet for Faster First Render -->
     <link
-      rel="stylesheet"
+      rel="preload"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      />
+    </noscript>
   </head>
   <body>
     <header class="navbar">
       <div class="logo">
         <a href="index.html">
           <img
-            src="../images/logo.jpeg"
+            src="../images/logo.webp"
             alt="FreshMart Logo"
             class="logo-img"
+            width="48"
+            height="42"
           />
           Fresh<span class="logo-highlight">Mart</span>
         </a>
@@ -31,7 +53,7 @@
   <i class="fa-solid fa-location-dot location-icon"></i>
   <div class="location-info">
     <span class="location-label">Deliver to</span>
-    <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()">
+    <button type="button" class="location-btn" id="locationBtn" onclick="openPincodeModal()" aria-label="Select delivery pincode location">
       <span id="currentPincode">Select Pincode</span> <i class="fa-solid fa-chevron-down"></i>
     </button>
   </div>
@@ -40,7 +62,7 @@
 
 <div class="pincode-modal" id="pincodeModal">
   <div class="modal-content">
-    <span class="close-modal" onclick="closePincodeModal()">&times;</span>
+    <span class="close-modal" onclick="closePincodeModal()" role="button" aria-label="Close delivery pincode modal">&times;</span>
     <h3>Enter Delivery Pincode</h3>
     <p>Check product availability and delivery time</p>
     <div class="pincode-input-group">
@@ -57,14 +79,14 @@
           id="searchInput"
           placeholder="Search fresh vegetables, fruits, milk..."
         />
-        <button type="button" id="searchBtn">
+        <button type="button" id="searchBtn" aria-label="Search fresh groceries">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
 
 
       <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-  <label for="menu-toggle" class="hamburger-btn">
+  <label for="menu-toggle" class="hamburger-btn" role="button" aria-label="Toggle navigation menu">
     <i class="fa-solid fa-bars"></i>
   </label>
 
@@ -73,7 +95,7 @@
     <a href="index.html" class="nav-item active">Home</a>
     <a href="products.html" class="nav-item">Groceries</a>
     
-   <a href="cart.html" class="cart-btn" aria-label="Cart">
+   <a href="cart.html" class="cart-btn" aria-label="View Shopping Cart">
   <i class="fa-solid fa-cart-shopping"></i>
   <span class="cart-badge" id="cartCount">0</span>
 </a>
@@ -89,7 +111,7 @@
 <main>
   <section class="hero-banner">
     <div class="hero-image">
-      <img src="../images/banner1.png" alt="Fresh Grocery Basket">
+      <img src="../images/banner1.webp" alt="Fresh Grocery Basket" width="735" height="344" fetchpriority="high">
     
       <div class="hero-content">
         <h1>ALL YOUR <span class="highlight">GROCERY</span><br>NEEDS MET.</h1>
@@ -108,12 +130,12 @@
 <section class="categories-section">
   <div class="categories-header">
     <div class="title-group">
-      <h4>Categories</h4>
+      <span class="section-tag">Categories</span>
       <h2>Featured Categories</h2>
     </div>
     <div class="nav-arrows">
-      <button class="arrow-btn" type="button"><i class="fa-solid fa-chevron-left"></i></button>
-      <button class="arrow-btn" type="button"><i class="fa-solid fa-chevron-right"></i></button>
+      <button class="arrow-btn" type="button" aria-label="Previous categories"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="arrow-btn" type="button" aria-label="Next categories"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
   </div>
 
@@ -121,7 +143,7 @@
    
     <a href="products.html?cat=fruits" class="category-item">
       <div class="circle-box border-pink">
-        <img src="../images/fruits2.jpeg" alt="Fresh Fruits">
+        <img src="../images/fruits2.webp" alt="Fresh Fruits" width="80" height="80" loading="lazy" decoding="async">
       </div>
       <h3>Fresh Fruits</h3>
       <span>10+ Items</span>
@@ -130,7 +152,7 @@
     
     <a href="products.html?cat=vegetables" class="category-item">
       <div class="circle-box border-yellow">
-        <img src="../images/vagetables.jpeg" alt="Vegetables">
+        <img src="../images/vagetables.webp" alt="Vegetables" width="80" height="80" loading="lazy" decoding="async">
       </div>
       <h3>Vegetables</h3>
       <span>120+ Items</span>
@@ -139,7 +161,7 @@
     
     <a href="products.html?cat=meat" class="category-item">
       <div class="circle-box border-green">
-        <img src="../images/pure1.jpg" alt="pure fruits">
+        <img src="../images/pure1.webp" alt="pure fruits" width="80" height="80" loading="lazy" decoding="async">
       </div>
       <h3>Pure Fruits</h3>
       <span>110+ Items</span>
@@ -147,7 +169,7 @@
 
     <a href="products.html?cat=fastfood" class="category-item">
       <div class="circle-box border-blue">
-        <img src="../images/fast.jpg" alt="Fast Food">
+        <img src="../images/fast.webp" alt="Fast Food" width="80" height="80" loading="lazy" decoding="async">
       </div>
       <h3>Fast Food</h3>
       <span>50+ Items</span>
@@ -156,7 +178,7 @@
    
     <a href="products.html?cat=bakery" class="category-item">
       <div class="circle-box border-orange">
-        <img src="../images/bread.jpeg" alt="Dry Bread">
+        <img src="../images/bread.webp" alt="Dry Bread" width="80" height="80" loading="lazy" decoding="async">
       </div>
       <h3>Dry Bread</h3>
       <span>70+ Items</span>
@@ -164,7 +186,7 @@
 
     <a href="products.html?cat=oil" class="category-item">
       <div class="circle-box border-lime">
-        <img src="../images/oil.jpeg" alt="Organic Oil">
+        <img src="../images/oil.webp" alt="Organic Oil" width="80" height="80" loading="lazy" decoding="async">
       </div>
       <h3>Organic Oil</h3>
       <span>20+ Items</span>
@@ -173,7 +195,7 @@
    
     <a href="products.html?cat=cake" class="category-item">
       <div class="circle-box border-magenta">
-        <img src="../images/layer.jpeg" alt="Layer Cake">
+        <img src="../images/layer.webp" alt="Layer Cake" width="80" height="80" loading="lazy" decoding="async">
       </div>
       <h3>Layer Cake</h3>
       <span>30+ Items</span>
@@ -194,7 +216,7 @@
         <a href="products.html?cat=fruits" class="btn-buy-now">Buy Now</a>
       </div>
       <div class="promo-img">
-        <img src="../images/fruits2.jpeg" alt="Fruits Banner">
+        <img src="../images/fruits2.webp" alt="Fruits Banner" width="100" height="100" loading="lazy" decoding="async">
       </div>
     </div>
 
@@ -205,7 +227,7 @@
         <a href="products.html?cat=vegetables" class="btn-buy-now">Buy Now</a>
       </div>
       <div class="promo-img">
-        <img src="../images/vagetables.jpeg" alt="Vegetables Banner">
+        <img src="../images/vagetables.webp" alt="Vegetables Banner" width="100" height="100" loading="lazy" decoding="async">
       </div>
     </div>
 
@@ -216,7 +238,7 @@
         <a href="products.html?cat=beauty" class="btn-buy-now">Buy Now</a>
       </div>
       <div class="promo-img">
-        <img src="../images/layer.jpeg" alt="Beauty Creams Banner">
+        <img src="../images/layer.webp" alt="Beauty Creams Banner" width="100" height="100" loading="lazy" decoding="async">
       </div>
     </div>
 
@@ -228,7 +250,7 @@
 <section class="products-section">
   <div class="products-header">
     <div class="title-group">
-      <h4>Our Shop</h4>
+      <span class="section-tag">Our Shop</span>
       <h2>Featured Products</h2>
     </div>
     <a href="products.html" class="btn-view-all">
@@ -236,12 +258,12 @@
     </a>
   </div>
 
-  <div class="products-grid">
+  <div class="products-grid" id="trendingGrid">
     <!-- Product Card 1 -->
     <div class="product-card" data-id="1">
       <span class="badge-discount">15% OFF</span>
       <div class="product-img-box">
-        <img src="../images/vagetables.jpeg" alt="Fresh Organic Vegetables">
+        <img src="../images/vagetables.webp" alt="Fresh Organic Vegetables" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Vegetables</span>
@@ -253,13 +275,13 @@
         </div>
         
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 1)">
+          <button type="button" class="btn-add-cart" aria-label="Add Fresh Organic Veggies to cart" onclick="handleAddInitial(this, 1)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(1, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(1, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(1, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(1, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -269,7 +291,7 @@
     <div class="product-card" data-id="2">
       <span class="badge-discount">20% OFF</span>
       <div class="product-img-box">
-        <img src="../images/fruits2.jpeg" alt="Fresh Apple">
+        <img src="../images/fruits2.webp" alt="Fresh Apple" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Fruits</span>
@@ -281,13 +303,13 @@
         </div>
         
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 2)">
+          <button type="button" class="btn-add-cart" aria-label="Add Fresh Red Apples to cart" onclick="handleAddInitial(this, 2)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(2, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(2, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(2, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(2, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -296,7 +318,7 @@
     <!-- Product Card 3 -->
     <div class="product-card" data-id="3">
       <div class="product-img-box">
-        <img src="../images/bread.jpeg" alt="Fresh Bread">
+        <img src="../images/bread.webp" alt="Fresh Bread" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Bakery</span>
@@ -307,13 +329,13 @@
         </div>
         
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 3)">
+          <button type="button" class="btn-add-cart" aria-label="Add Fresh Brown Bread to cart" onclick="handleAddInitial(this, 3)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(3, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(3, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(3, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(3, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -323,7 +345,7 @@
     <div class="product-card" data-id="4">
       <span class="badge-discount">10% OFF</span>
       <div class="product-img-box">
-        <img src="../images/fast.jpg" alt="Fast Food Snack">
+        <img src="../images/fast.webp" alt="Fast Food Snack" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Snacks</span>
@@ -335,23 +357,23 @@
         </div>
         
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 4)">
+          <button type="button" class="btn-add-cart" aria-label="Add Tasty Fast Snack to cart" onclick="handleAddInitial(this, 4)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(4, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(4, -1, this)">-</button>
             <span class="qty-value">1</span>
             <button type="button" class="qty-btn" onclick="updateQty(4, 1, this)">+</button>
           </div>
         </div>
       </div>
-    </div>
+    </div> 
 
     <!-- Product Card 5 -->
     <div class="product-card" data-id="5">
       <span class="badge-discount">5% OFF</span>
       <div class="product-img-box">
-        <img src="../images/pure1.jpg" alt="Organic Milk">
+        <img src="../images/pure1.webp" alt="Organic Milk" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Dairy</span>
@@ -363,13 +385,13 @@
         </div>
         
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 5)">
+          <button type="button" class="btn-add-cart" aria-label="Add Fresh Organic Milk to cart" onclick="handleAddInitial(this, 5)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(5, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(5, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(5, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(5, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -379,7 +401,7 @@
     <div class="product-card" data-id="6">
       <span class="badge-discount">25% OFF</span>
       <div class="product-img-box">
-        <img src="../images/oil.jpeg" alt="Pure Honey">
+        <img src="../images/oil.webp" alt="Pure Honey" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Organic</span>
@@ -391,13 +413,13 @@
         </div>
         
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 6)">
+          <button type="button" class="btn-add-cart" aria-label="Add Pure Natural Honey to cart" onclick="handleAddInitial(this, 6)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(6, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(6, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(6, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(6, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -409,14 +431,14 @@
 <section class="carousel-section">
   <div class="carousel-header">
     <div class="title-group">
-      <h4>Top Picks</h4>
+      <span class="section-tag">Top Picks</span>
       <h2>Trending & Buy Again</h2>
     </div>
     <div class="carousel-arrows">
-      <button type="button" class="c-arrow-btn" onclick="scrollCarousel(-1)">
+      <button type="button" class="c-arrow-btn" onclick="scrollCarousel(-1)" aria-label="Previous trending products">
         <i class="fa-solid fa-chevron-left"></i>
       </button>
-      <button type="button" class="c-arrow-btn" onclick="scrollCarousel(1)">
+      <button type="button" class="c-arrow-btn" onclick="scrollCarousel(1)" aria-label="Next trending products">
         <i class="fa-solid fa-chevron-right"></i>
       </button>
     </div>
@@ -427,7 +449,7 @@
     <div class="product-card carousel-card" data-id="101">
       <span class="badge-discount">Best Seller</span>
       <div class="product-img-box">
-        <img src="../images/vagetables.jpeg" alt="Fresh Tomatoes">
+        <img src="../images/vagetables.webp" alt="Fresh Tomatoes" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Vegetables</span>
@@ -438,13 +460,13 @@
           <span class="unit">/ kg</span>
         </div>
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 101)">
+          <button type="button" class="btn-add-cart" aria-label="Add Red Tomatoes to cart" onclick="handleAddInitial(this, 101)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(101, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(101, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(101, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(101, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -453,7 +475,7 @@
     <!-- Carousel Item 2 -->
     <div class="product-card carousel-card" data-id="102">
       <div class="product-img-box">
-        <img src="../images/fruits2.jpeg" alt="Fresh Bananas">
+        <img src="../images/fruits2.webp" alt="Fresh Bananas" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Fruits</span>
@@ -463,13 +485,13 @@
           <span class="unit">/ dozen</span>
         </div>
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 102)">
+          <button type="button" class="btn-add-cart" aria-label="Add Ripe Bananas to cart" onclick="handleAddInitial(this, 102)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(102, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(102, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(102, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(102, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -479,7 +501,7 @@
     <div class="product-card carousel-card" data-id="103">
       <span class="badge-discount">10% OFF</span>
       <div class="product-img-box">
-        <img src="../images/pure1.jpg" alt="Fresh Butter">
+        <img src="../images/pure1.webp" alt="Fresh Butter" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Dairy</span>
@@ -490,13 +512,13 @@
           <span class="unit">/ pack</span>
         </div>
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 103)">
+          <button type="button" class="btn-add-cart" aria-label="Add Amul Butter to cart" onclick="handleAddInitial(this, 103)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(103, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(103, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(103, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(103, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -505,7 +527,7 @@
     <!-- Carousel Item 4 -->
     <div class="product-card carousel-card" data-id="104">
       <div class="product-img-box">
-        <img src="../images/bread.jpeg" alt="Whole Wheat Bread">
+        <img src="../images/bread.webp" alt="Whole Wheat Bread" width="200" height="200" loading="lazy" decoding="async">
       </div>
       <div class="product-info">
         <span class="product-cat">Bakery</span>
@@ -515,13 +537,13 @@
           <span class="unit">/ pack</span>
         </div>
         <div class="cart-action-container">
-          <button type="button" class="btn-add-cart" onclick="handleAddInitial(this, 104)">
+          <button type="button" class="btn-add-cart" aria-label="Add Wheat Bread to cart" onclick="handleAddInitial(this, 104)">
             <i class="fa-solid fa-cart-plus"></i> Add
           </button>
           <div class="qty-counter-box hidden">
-            <button type="button" class="qty-btn" onclick="updateQty(104, -1, this)">-</button>
+            <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty(104, -1, this)">-</button>
             <span class="qty-value">1</span>
-            <button type="button" class="qty-btn" onclick="updateQty(104, 1, this)">+</button>
+            <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty(104, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -535,17 +557,17 @@
     <div class="footer-top">
       <div class="footer-brand">
         <a href="index.html" class="footer-logo">
-          <img src="../images/logo.jpeg" alt="FreshMart Logo" />
+          <img src="../images/logo.webp" alt="FreshMart Logo" width="40" height="35" loading="lazy" decoding="async" />
           Fresh<span>Mart</span>
         </a>
         <p class="footer-desc">
           FreshMart is your trusted neighborhood online grocery store delivering fresh farm vegetables, crisp fruits, organic dairy, and pantry staples in under 2 hours.
         </p>
         <div class="footer-social-links">
-          <a href="javascript:void(0)" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="javascript:void(0)" class="social-icon-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="javascript:void(0)" class="social-icon-btn" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
-          <a href="javascript:void(0)" class="social-icon-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" aria-label="FreshMart Facebook Page" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" aria-label="FreshMart Instagram Page" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" aria-label="FreshMart Twitter Page" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="javascript:void(0)" class="social-icon-btn" aria-label="FreshMart WhatsApp Support" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
       </div>
 
@@ -612,6 +634,7 @@
     </div>
   </footer>
    
+  <script src="../javascript/api.js"></script>
   <script src="../javascript/main.js"></script>
   <script src="../javascript/index.js"></script>
 </body>

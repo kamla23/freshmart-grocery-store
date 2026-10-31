@@ -291,7 +291,7 @@ function validateShippingForm() {
 }
 
 // ================= 6. PLACE ORDER ACTION ================= //
-function handlePlaceOrder() {
+async function handlePlaceOrder() {
   if (checkoutCart.length === 0) {
     alert("Your cart is empty! Please add items before placing an order.");
     return;
@@ -334,23 +334,24 @@ function handlePlaceOrder() {
   placeOrderBtn.disabled = true;
   placeOrderBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing Order...`;
 
-  setTimeout(() => {
-    // Generate Order ID
-    const randomId = Math.floor(100000 + Math.random() * 900000);
-    const orderId = `FM-${randomId}`;
-
+  try {
     const addressSummary = `${document.getElementById("houseNumber").value.trim()}, ${document.getElementById("streetAddress").value.trim()}, ${document.getElementById("city").value.trim()} - ${document.getElementById("pincode").value.trim()} (${selectedAddressType})`;
+    const user = window.FreshMartAPI ? FreshMartAPI.getUser() : null;
 
-    // Save order object
-    const newOrder = {
-      orderId: orderId,
-      orderDate: new Date().toISOString(),
-      formattedDate: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }),
-      items: checkoutCart,
+    const orderPayload = {
+      items: checkoutCart.map(item => ({
+        productId: (item.id && String(item.id).length === 24) ? String(item.id) : null,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        weight: item.variant || "Standard",
+        imageUrl: item.image
+      })),
+      userId: user ? (user.id || user._id) : null,
       subtotal: orderTotals.subtotal,
       deliveryFee: orderTotals.deliveryFee,
       tax: orderTotals.tax,
-      totalAmount: orderTotals.total,
+      totalPrice: orderTotals.total,
       deliverySlot: `${selectedDate}, ${selectedTimeSlot}`,
       shippingAddress: {
         fullName: document.getElementById("fullName").value.trim(),
@@ -365,12 +366,37 @@ function handlePlaceOrder() {
         preference: selectedSubstitution,
         callBeforeReplace: document.getElementById("callBeforeReplace")?.checked || false
       },
+      paymentMethod: selectedPaymentMethod
+    };
+
+    let confirmedOrderId = `FM-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    // 1. Live Order Placement in MongoDB Atlas Cloud
+    if (window.FreshMartAPI) {
+      const res = await FreshMartAPI.post("/orders", orderPayload, true);
+      if (res.success && res.order) {
+        confirmedOrderId = res.order.orderId || confirmedOrderId;
+      }
+    }
+
+    const newOrder = {
+      orderId: confirmedOrderId,
+      orderDate: new Date().toISOString(),
+      formattedDate: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+      items: checkoutCart,
+      subtotal: orderTotals.subtotal,
+      deliveryFee: orderTotals.deliveryFee,
+      tax: orderTotals.tax,
+      totalAmount: orderTotals.total,
+      deliverySlot: `${selectedDate}, ${selectedTimeSlot}`,
+      shippingAddress: orderPayload.shippingAddress,
+      substitution: orderPayload.substitution,
       paymentMethod: selectedPaymentMethod,
       paymentStatus: selectedPaymentMethod === "COD" ? "Pending (Cash on Delivery)" : "Paid (Online)",
       orderStatus: "Confirmed"
     };
 
-    // Store in localStorage under freshmart_orders
+    // Store in localStorage for instant client fallback sync
     try {
       const orders = JSON.parse(localStorage.getItem("freshmart_orders")) || [];
       orders.unshift(newOrder);
@@ -391,7 +417,12 @@ function handlePlaceOrder() {
 
     // Show Confirmation Modal
     showOrderModal(newOrder, addressSummary);
-  }, 900);
+  } catch (err) {
+    console.error("Order creation failed:", err);
+    placeOrderBtn.innerHTML = originalBtnContent;
+    placeOrderBtn.disabled = false;
+    alert("Could not process order. Please try again.");
+  }
 }
 
 function showOrderModal(order, addressSummary) {

@@ -100,12 +100,81 @@ const DEFAULT_ADMIN_ORDERS = [
   }
 ];
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   setupLiveDate();
+  await fetchLiveDashboardData();
   calculateAndRenderMetrics();
   renderLowStockAlerts();
   renderRecentOrders();
 });
+
+async function fetchLiveDashboardData() {
+  if (window.FreshMartAPI) {
+    try {
+      // 1. Fetch live metrics from MongoDB Atlas
+      const metricsRes = await FreshMartAPI.get("/orders/metrics", true, true);
+      if (metricsRes.success && metricsRes.metrics) {
+        const m = metricsRes.metrics;
+        const salesEl = document.getElementById("metricSalesAmount");
+        const ordersEl = document.getElementById("metricOrdersCount");
+        const usersEl = document.getElementById("metricUsersCount");
+        const stockEl = document.getElementById("metricLowStockCount");
+
+        if (salesEl) salesEl.textContent = (m.totalSales || 0).toLocaleString("en-IN");
+        if (ordersEl) ordersEl.textContent = m.totalOrders || 0;
+        if (usersEl) usersEl.textContent = m.registeredUsers || 0;
+        if (stockEl) stockEl.textContent = m.lowStockCount || 0;
+      }
+
+      // 2. Fetch live orders to populate recent orders table
+      const ordersRes = await FreshMartAPI.get("/orders", true, true);
+      if (ordersRes.success && Array.isArray(ordersRes.orders)) {
+        const formatted = ordersRes.orders.map(o => ({
+          orderId: o.orderId,
+          orderDate: o.createdAt,
+          formattedDate: new Date(o.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
+          items: o.items.map(it => ({
+            id: it.productId || "item",
+            name: it.name,
+            price: it.price,
+            variant: it.weight || "1 unit",
+            quantity: it.quantity,
+            image: it.imageUrl || "../images/vagetables.jpeg"
+          })),
+          subtotal: o.subtotal,
+          deliveryFee: o.deliveryFee,
+          tax: o.tax,
+          totalAmount: o.totalPrice,
+          deliverySlot: o.deliverySlot,
+          shippingAddress: o.shippingAddress,
+          substitution: o.substitution,
+          paymentMethod: o.paymentMethod,
+          paymentStatus: o.paymentStatus,
+          orderStatus: o.orderStatus
+        }));
+        localStorage.setItem("freshmart_orders", JSON.stringify(formatted));
+      }
+
+      // 3. Fetch live products to populate low-stock alerts
+      const prodRes = await FreshMartAPI.get("/products");
+      if (prodRes.success && Array.isArray(prodRes.products)) {
+        const inventory = prodRes.products.map(p => ({
+          id: p._id,
+          name: p.name,
+          category: p.category,
+          price: p.price,
+          unit: p.unit || "500g",
+          stock: p.stock,
+          threshold: p.threshold || 5,
+          image: p.imageUrl ? (p.imageUrl.startsWith("/uploads") ? ((window.FreshMartAPI ? FreshMartAPI.UPLOADS_BASE : "http://localhost:5000/uploads") + p.imageUrl.replace("/uploads", "")) : p.imageUrl) : "../images/vagetables.jpeg"
+        }));
+        localStorage.setItem("freshmart_inventory", JSON.stringify(inventory));
+      }
+    } catch (e) {
+      console.warn("Could not fetch remote dashboard data:", e);
+    }
+  }
+}
 
 // ================= 1. LIVE DATE HEADER ================= //
 function setupLiveDate() {
@@ -188,13 +257,14 @@ function renderLowStockAlerts() {
   lowStockItems.forEach(item => {
     const chip = document.createElement("div");
     chip.className = "low-stock-chip";
+    const imgSource = item.image || '../images/vagetables.webp';
     chip.innerHTML = `
-      <img src="${item.image || '../images/vagetables.jpeg'}" alt="${item.name}">
+      <img src="${imgSource}" alt="${item.name}" width="36" height="36" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../images/vagetables.webp';">
       <div class="low-stock-info">
         <span class="low-stock-name">${item.name}</span>
         <span class="low-stock-count">${item.stock} left in stock</span>
       </div>
-      <button type="button" class="btn-restock-sm" onclick="handleRestockItem('${item.id}')">
+      <button type="button" class="btn-restock-sm" aria-label="Restock 10 units of ${item.name}" onclick="handleRestockItem('${item.id}')">
         +10 Restock
       </button>
     `;
@@ -267,7 +337,7 @@ function renderRecentOrders() {
         </span>
       </td>
       <td>
-        <select class="status-select ${statusClass}" onchange="handleOrderStatusChange('${order.orderId}', this.value, this)">
+        <select class="status-select ${statusClass}" aria-label="Update status for order #${order.orderId}" onchange="handleOrderStatusChange('${order.orderId}', this.value, this)">
           <option value="Processing" ${order.orderStatus === 'Processing' ? 'selected' : ''}>Processing</option>
           <option value="Out for Delivery" ${order.orderStatus === 'Out for Delivery' ? 'selected' : ''}>Out for Delivery</option>
           <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
@@ -275,7 +345,7 @@ function renderRecentOrders() {
         </select>
       </td>
       <td>
-        <button type="button" class="btn-inspect" onclick="inspectAdminOrder('${order.orderId}')">
+        <button type="button" class="btn-inspect" aria-label="Inspect details for order #${order.orderId}" onclick="inspectAdminOrder('${order.orderId}')">
           <i class="fa-solid fa-eye"></i> Inspect
         </button>
       </td>
@@ -285,8 +355,8 @@ function renderRecentOrders() {
   });
 }
 
-// Live Status Update in localStorage
-function handleOrderStatusChange(orderId, newStatus, selectElement) {
+// Live Status Update in localStorage & MongoDB Atlas
+async function handleOrderStatusChange(orderId, newStatus, selectElement) {
   let orders = getAdminOrders();
   const order = orders.find(o => String(o.orderId) === String(orderId));
 
@@ -302,6 +372,15 @@ function handleOrderStatusChange(orderId, newStatus, selectElement) {
 
     // Show toast
     showAdminToast(`Order #${orderId} status changed to ${newStatus}`);
+
+    // Live sync to MongoDB Atlas Cloud
+    if (window.FreshMartAPI) {
+      try {
+        await FreshMartAPI.patch(`/orders/${orderId}/status`, { status: newStatus }, true, true);
+      } catch (e) {
+        console.warn("Could not sync order status to server:", e);
+      }
+    }
   }
 }
 

@@ -149,13 +149,15 @@
   text-align: center;
 }
 
-.categories-header h4 {
+.categories-header h4,
+.categories-header .section-tag {
   font-size: 13px;
-  color: #10b981;            
+  color: #047857;            
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
   margin-bottom: 4px;
+  display: block;
 }
 
 
@@ -421,13 +423,15 @@
   text-align: center;        /* Sub-heading aur Main Heading dono center honge */
 }
 
-.products-header h4 {
+.products-header h4,
+.products-header .section-tag {
   font-size: 13px;
-  color: #10b981;
+  color: #047857;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
   margin-bottom: 4px;
+  display: block;
 }
 
 .products-header h2 {
@@ -849,13 +853,15 @@
   text-align: center;        /* Sub-heading aur Main Heading dono center honge */
 }
 
-.carousel-header h4 {
+.carousel-header h4,
+.carousel-header .section-tag {
   font-size: 13px;
-  color: #10b981;
+  color: #047857;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
   margin-bottom: 4px;
+  display: block;
 }
 
 .carousel-header h2 {

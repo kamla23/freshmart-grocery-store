@@ -185,8 +185,8 @@
 
 .location-label {
   font-size: 10px;
-  color: #6b7280;
-  font-weight: 600;
+  color: #374151;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -233,7 +233,7 @@
   right: 15px;
   font-size: 24px;
   cursor: pointer;
-  color: #6b7280;
+  color: #374151;
 }
 
 .pincode-input-group {

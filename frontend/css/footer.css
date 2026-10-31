@@ -2,7 +2,7 @@
 
 .site-footer {
   background-color: #111827;
-  color: #9ca3af;
+  color: #d1d5db;
   font-size: 14px;
   line-height: 1.6;
   margin-top: 60px;
@@ -165,14 +165,14 @@
   align-items: center;
   gap: 12px;
   font-size: 22px;
-  color: #9ca3af;
+  color: #d1d5db;
 }
 
 .payment-badges-row span {
   font-size: 12px;
   text-transform: uppercase;
   font-weight: 700;
-  color: #6b7280;
+  color: #d1d5db;
   margin-right: 4px;
 }
 

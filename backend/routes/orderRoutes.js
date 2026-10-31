@@ -67,16 +67,22 @@ router.post("/", async (req, res) => {
 // @desc    Get order history for logged-in user
 router.get("/my-orders", authMiddleware, async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    const userFilter = [
+      { userId: req.user._id }
+    ];
+    if (req.user.phone) userFilter.push({ "shippingAddress.phone": req.user.phone });
+    if (req.user.email) userFilter.push({ "shippingAddress.email": req.user.email });
+
+    const orders = await Order.find({ $or: userFilter }).sort({ createdAt: -1 });
     res.json({ success: true, count: orders.length, orders });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error fetching user orders" });
   }
 });
 
-// @route   GET /api/orders/all
-// @desc    Get all orders for Admin Fulfillment Center
-router.get("/all", authMiddleware, adminMiddleware, async (req, res) => {
+// @route   GET /api/orders and GET /api/orders/all
+// @desc    Get all orders for Admin Fulfillment Center & Dashboard
+const getAllOrdersHandler = async (req, res) => {
   try {
     const { status } = req.query;
     let query = {};
@@ -89,38 +95,10 @@ router.get("/all", authMiddleware, adminMiddleware, async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Error fetching fulfillment orders" });
   }
-});
+};
 
-// @route   PATCH /api/orders/:id/status
-// @desc    Update order fulfillment status (Pending -> Packing -> Out for Delivery -> Completed)
-router.patch("/:id/status", authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const { status } = req.body;
-    const allowed = ["Pending", "Processing", "Packing", "Out for Delivery", "Delivered", "Completed", "Cancelled"];
-
-    if (!allowed.includes(status)) {
-      return res.status(400).json({ success: false, message: "Invalid order status value" });
-    }
-
-    const order = await Order.findOneAndUpdate(
-      { $or: [{ _id: req.params.id }, { orderId: req.params.id }] },
-      { orderStatus: status },
-      { new: true }
-    );
-
-    if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found" });
-    }
-
-    res.json({
-      success: true,
-      message: `Order #${order.orderId} moved to ${status}`,
-      order
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Error updating order status" });
-  }
-});
+router.get("/", authMiddleware, adminMiddleware, getAllOrdersHandler);
+router.get("/all", authMiddleware, adminMiddleware, getAllOrdersHandler);
 
 // @route   GET /api/orders/metrics
 // @desc    Get admin dashboard metrics summary
@@ -145,5 +123,63 @@ router.get("/metrics", authMiddleware, adminMiddleware, async (req, res) => {
     res.status(500).json({ success: false, message: "Error fetching metrics" });
   }
 });
+
+// @route   GET /api/orders/:id
+// @desc    Get single order details by Mongo ID or Order ID
+router.get("/:id", authMiddleware, async (req, res) => {
+  try {
+    const isMongoId = req.params.id.length === 24;
+    const query = isMongoId 
+      ? { $or: [{ _id: req.params.id }, { orderId: req.params.id }] }
+      : { orderId: req.params.id };
+
+    const order = await Order.findOne(query);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+    res.json({ success: true, order });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching order", error: error.message });
+  }
+});
+
+// @route   PATCH or PUT /api/orders/:id/status
+// @desc    Update order fulfillment status (Pending -> Packing -> Out for Delivery -> Completed)
+const updateStatusHandler = async (req, res) => {
+  try {
+    const status = req.body.status || req.body.orderStatus;
+    const allowed = ["Pending", "Processing", "Packing", "Out for Delivery", "Delivered", "Completed", "Cancelled"];
+
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ success: false, message: "Invalid order status value" });
+    }
+
+    const isMongoId = req.params.id.length === 24;
+    const query = isMongoId 
+      ? { $or: [{ _id: req.params.id }, { orderId: req.params.id }] }
+      : { orderId: req.params.id };
+
+    const order = await Order.findOneAndUpdate(
+      query,
+      { orderStatus: status },
+      { new: true }
+    );
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    res.json({
+      success: true,
+      message: `Order #${order.orderId} moved to ${status}`,
+      order
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error updating order status", error: error.message });
+  }
+};
+
+router.patch("/:id/status", authMiddleware, adminMiddleware, updateStatusHandler);
+router.put("/:id/status", authMiddleware, adminMiddleware, updateStatusHandler);
 
 export default router;

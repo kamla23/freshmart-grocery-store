@@ -57,12 +57,63 @@ const DEFAULT_SEED_ORDERS = [
 
 let currentOrderFilter = "ALL";
 
-document.addEventListener("DOMContentLoaded", () => {
-  initProfileData();
-  renderOrders();
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchLiveProfile();
+  await fetchLiveOrders();
   renderAddresses();
   updateStats();
 });
+
+async function fetchLiveProfile() {
+  if (window.FreshMartAPI && FreshMartAPI.getToken()) {
+    try {
+      const res = await FreshMartAPI.get("/auth/profile", true);
+      if (res.success && res.user) {
+        FreshMartAPI.setUser(res.user);
+      }
+    } catch (e) {
+      console.warn("Could not fetch remote profile:", e);
+    }
+  }
+  initProfileData();
+}
+
+async function fetchLiveOrders() {
+  if (window.FreshMartAPI && FreshMartAPI.getToken()) {
+    try {
+      const res = await FreshMartAPI.get("/orders/my-orders", true);
+      if (res.success && Array.isArray(res.orders) && res.orders.length > 0) {
+        const formatted = res.orders.map(o => ({
+          orderId: o.orderId,
+          orderDate: o.createdAt,
+          formattedDate: new Date(o.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+          items: o.items.map(it => ({
+            id: it.productId || "item",
+            name: it.name,
+            price: it.price,
+            variant: it.weight || "1 unit",
+            quantity: it.quantity,
+            image: it.imageUrl || "../images/vagetables.jpeg"
+          })),
+          subtotal: o.subtotal,
+          deliveryFee: o.deliveryFee,
+          tax: o.tax,
+          totalAmount: o.totalPrice,
+          deliverySlot: o.deliverySlot,
+          shippingAddress: o.shippingAddress,
+          substitution: o.substitution,
+          paymentMethod: o.paymentMethod,
+          paymentStatus: o.paymentStatus,
+          orderStatus: o.orderStatus
+        }));
+        localStorage.setItem("freshmart_orders", JSON.stringify(formatted));
+      }
+    } catch (e) {
+      console.warn("Could not fetch remote orders:", e);
+    }
+  }
+  renderOrders();
+}
 
 // ================= 1. INITIALIZATION & TAB SWITCHING ================= //
 function initProfileData() {

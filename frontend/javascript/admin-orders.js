@@ -5,9 +5,46 @@ if (localStorage.getItem("freshmart_admin_logged_in") !== "true") {
 
 let currentTabStatus = "ALL";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchLiveAdminOrders();
   renderFulfillmentDashboard();
 });
+
+async function fetchLiveAdminOrders() {
+  if (window.FreshMartAPI) {
+    try {
+      const res = await FreshMartAPI.get("/orders", true, true);
+      if (res.success && Array.isArray(res.orders)) {
+        const formatted = res.orders.map(o => ({
+          orderId: o.orderId,
+          orderDate: o.createdAt,
+          formattedDate: new Date(o.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
+          items: o.items.map(it => ({
+            id: it.productId || "item",
+            name: it.name,
+            price: it.price,
+            variant: it.weight || "1 unit",
+            quantity: it.quantity,
+            image: it.imageUrl || "../images/vagetables.jpeg"
+          })),
+          subtotal: o.subtotal,
+          deliveryFee: o.deliveryFee,
+          tax: o.tax,
+          totalAmount: o.totalPrice,
+          deliverySlot: o.deliverySlot,
+          shippingAddress: o.shippingAddress,
+          substitution: o.substitution,
+          paymentMethod: o.paymentMethod,
+          paymentStatus: o.paymentStatus,
+          orderStatus: o.orderStatus
+        }));
+        localStorage.setItem("freshmart_orders", JSON.stringify(formatted));
+      }
+    } catch (e) {
+      console.warn("Could not fetch remote orders for admin:", e);
+    }
+  }
+}
 
 
 function getAllOrders() {
@@ -216,7 +253,7 @@ function renderFulfillmentTable() {
   });
 }
 
-function handleStageChange(orderId, newStatus, selectEl) {
+async function handleStageChange(orderId, newStatus, selectEl) {
   let orders = getAllOrders();
   const order = orders.find(o => String(o.orderId) === String(orderId));
 
@@ -227,10 +264,17 @@ function handleStageChange(orderId, newStatus, selectEl) {
     const norm = normalizeStatus(newStatus);
     selectEl.className = `fulfillment-status-select ${norm.toLowerCase().replace(/\s+/g, "-")}`;
 
-
     updateTabCounts();
-
     showAdminToast(`Order #${orderId} moved to stage: ${newStatus}`);
+
+    // Live sync to MongoDB Atlas Cloud
+    if (window.FreshMartAPI) {
+      try {
+        await FreshMartAPI.patch(`/orders/${orderId}/status`, { status: newStatus }, true, true);
+      } catch (e) {
+        console.warn("Could not sync order status to server:", e);
+      }
+    }
   }
 }
 

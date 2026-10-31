@@ -4,23 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Order Fulfillment Center - FreshMart Admin</title>
+  <meta name="description" content="FreshMart Order Fulfillment Center for processing, dispatching, and managing online grocery delivery orders." />
+  <meta name="theme-color" content="#10b981" />
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/admin-dashboard.css" />
   <link rel="stylesheet" href="../css/admin-orders.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 </head>
 <body class="admin-body">
 
   <!-- Admin Topbar Navigation -->
   <header class="admin-topbar">
     <a href="admin-dashboard.html" class="admin-brand">
-      <img src="../images/logo.jpeg" alt="FreshMart Logo" class="admin-logo-img" />
+      <img src="../images/logo.webp" alt="FreshMart Logo" class="admin-logo-img" width="38" height="34" />
       <div class="admin-brand-title">Fresh<span>Mart</span></div>
       <span class="admin-badge">Admin Portal</span>
     </a>
 
     <div class="admin-top-right">
-      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront">
+      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront" aria-label="View Customer Storefront">
         <i class="fa-solid fa-store"></i> <span>View Store</span>
       </a>
 
@@ -32,7 +37,7 @@
         </div>
       </div>
 
-      <a href="admin-login.html" class="btn-view-store" title="Log Out" onclick="handleAdminLogout(event)">
+      <a href="admin-login.html" class="btn-view-store" title="Log Out" aria-label="Log Out of Admin Portal" onclick="handleAdminLogout(event)">
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </a>
     </div>
@@ -152,14 +157,14 @@
   </div>
 
   <!-- ================= WAREHOUSE PACKING SLIP MODAL ================= -->
-  <div class="admin-modal-overlay" id="packingSlipModal">
+  <div class="admin-modal-overlay" id="packingSlipModal" role="dialog" aria-modal="true" aria-label="Warehouse Packing Slip">
     <div class="packing-slip-card">
       <div class="slip-header">
         <div class="slip-title">
           <h2>FreshMart Warehouse Packing Slip</h2>
           <p>Order Pick & Pack Checklist for Store Operations</p>
         </div>
-        <button type="button" class="admin-modal-close" onclick="closePackingSlipModal()">&times;</button>
+        <button type="button" class="admin-modal-close" aria-label="Close packing slip modal" onclick="closePackingSlipModal()">&times;</button>
       </div>
 
       <div class="slip-meta-box">
@@ -217,6 +222,7 @@
     <span id="toastText">Order updated successfully!</span>
   </div>
 
+  <script src="../javascript/api.js"></script>
   <script src="../javascript/main.js"></script>
   <script src="../javascript/admin-orders.js"></script>
 </body>

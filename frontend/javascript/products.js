@@ -1,9 +1,12 @@
 /**
  * FreshMart - Products Listing Page Logic (products.js)
- * Manages Filtering (Category, Price, Tags), Sorting, and URL query handling.
+ * Manages Live MongoDB Atlas Product Fetching, Filtering (Category, Price, Tags), Sorting, and URL query handling.
  */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // Load live products from MongoDB Atlas
+  await loadProductsFromAPI();
+
   // Check URL params for deep linking (e.g. ?cat=fruits or ?search=spinach)
   handleURLParams();
 
@@ -15,6 +18,63 @@ document.addEventListener("DOMContentLoaded", () => {
     restoreCartUI();
   }
 });
+
+/**
+ * Fetch products dynamically from MongoDB Atlas REST API
+ */
+async function loadProductsFromAPI() {
+  if (!window.FreshMartAPI) return;
+  try {
+    const res = await FreshMartAPI.get("/products");
+    if (res.success && Array.isArray(res.products) && res.products.length > 0) {
+      renderProductsGrid(res.products);
+    }
+  } catch (err) {
+    console.warn("Could not load products from API, using fallback DOM:", err);
+  }
+}
+
+/**
+ * Dynamically render product cards into #listingGrid
+ */
+function renderProductsGrid(products) {
+  const grid = document.getElementById("listingGrid");
+  if (!grid) return;
+
+  grid.innerHTML = products.map(p => {
+    let imgPath = p.imageUrl || "../images/vagetables.webp";
+    if (imgPath.startsWith("/uploads")) {
+      const base = window.FreshMartAPI ? FreshMartAPI.UPLOADS_BASE : "http://localhost:5000/uploads";
+      imgPath = `${base}${imgPath.replace("/uploads", "")}`;
+    }
+
+    return `
+      <div class="product-card" data-id="${p._id}">
+        ${p.isOrganic ? '<span class="badge-discount" style="background:#059669;">ORGANIC</span>' : ''}
+        <div class="product-img-box">
+          <a href="product-detail.html?id=${p._id}"><img src="${imgPath}" alt="${p.name}" width="220" height="220" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../images/vagetables.webp';"></a>
+        </div>
+        <div class="product-info">
+          <span class="product-cat">${p.category}</span>
+          <h3 class="product-title"><a href="product-detail.html?id=${p._id}">${p.name}</a> <span class="weight-tag">${p.unit || 'pack'}</span></h3>
+          <div class="product-price">
+            <span class="current-price">₹${p.price}</span>
+          </div>
+          <div class="cart-action-container">
+            <button type="button" class="btn-add-cart" aria-label="Add ${p.name} to cart" onclick="handleAddInitial(this, '${p._id}')">
+              <i class="fa-solid fa-cart-plus"></i> Add
+            </button>
+            <div class="qty-counter-box hidden">
+              <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="updateQty('${p._id}', -1, this)">-</button>
+              <span class="qty-value">1</span>
+              <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="updateQty('${p._id}', 1, this)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
 
 /**
  * Handle incoming query parameters from URL

@@ -4,23 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Inventory Manager - FreshMart Admin</title>
+  <meta name="description" content="FreshMart Inventory and Catalog Manager for adding, editing, restocking, and removing grocery items." />
+  <meta name="theme-color" content="#10b981" />
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/admin-dashboard.css" />
   <link rel="stylesheet" href="../css/admin-products.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 </head>
 <body class="admin-body">
 
   <!-- Admin Topbar Navigation -->
   <header class="admin-topbar">
     <a href="admin-dashboard.html" class="admin-brand">
-      <img src="../images/logo.jpeg" alt="FreshMart Logo" class="admin-logo-img" />
+      <img src="../images/logo.webp" alt="FreshMart Logo" class="admin-logo-img" width="38" height="34" />
       <div class="admin-brand-title">Fresh<span>Mart</span></div>
       <span class="admin-badge">Admin Portal</span>
     </a>
 
     <div class="admin-top-right">
-      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront">
+      <a href="index.html" class="btn-view-store" title="Go to Customer Storefront" aria-label="View Customer Storefront">
         <i class="fa-solid fa-store"></i> <span>View Store</span>
       </a>
 
@@ -32,7 +37,7 @@
         </div>
       </div>
 
-      <a href="admin-login.html" class="btn-view-store" title="Log Out" onclick="handleAdminLogout(event)">
+      <a href="admin-login.html" class="btn-view-store" title="Log Out" aria-label="Log Out of Admin Portal" onclick="handleAdminLogout(event)">
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </a>
     </div>
@@ -137,33 +142,44 @@
   </div>
 
   <!-- ================= ADD / EDIT PRODUCT MODAL ================= -->
-  <div class="admin-modal-overlay" id="productModal">
+  <div class="admin-modal-overlay" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
     <div class="product-modal-card">
       <div class="admin-modal-header">
         <h3 id="productModalTitle">Add New Grocery Product</h3>
-        <button type="button" class="admin-modal-close" onclick="closeProductModal()">&times;</button>
+        <button type="button" class="admin-modal-close" aria-label="Close product dialog" onclick="closeProductModal()">&times;</button>
       </div>
 
       <form id="productForm" onsubmit="handleSaveProduct(event)">
         <input type="hidden" id="editProductId" value="" />
 
-        <!-- 1. Image Upload Section (Multer-Ready) -->
+        <!-- 1. Image Upload Section (Multer-Ready, Online URL & Rich Presets) -->
         <div class="image-upload-wrapper">
           <div class="image-preview-box">
-            <img id="imagePreview" src="../images/vagetables.jpeg" alt="Product Preview" />
+            <img id="imagePreview" src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500&auto=format&fit=crop&q=80" alt="Product Preview" onerror="this.onerror=null;this.src='../images/vagetables.jpeg';" />
           </div>
           <div class="upload-controls">
             <label><i class="fa-solid fa-cloud-arrow-up" style="color: #10b981;"></i> Product Image</label>
-            <input type="file" id="productImageFile" accept="image/*" onchange="handleImageFileUpload(event)" style="font-size: 12px;" />
-            <small>Upload file (Multer compatible) or pick a preset image below:</small>
+            <input type="file" id="productImageFile" accept="image/*" onchange="handleImageFileUpload(event)" style="font-size: 12px; margin-bottom: 6px;" />
             
-            <div class="preset-images-picker">
-              <img src="../images/vagetables.jpeg" class="preset-thumb active" onclick="selectPresetImage(this)" title="Spinach / Veg" alt="Preset 1">
-              <img src="../images/fruits2.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Red Apples" alt="Preset 2">
-              <img src="../images/pure1.jpg" class="preset-thumb" onclick="selectPresetImage(this)" title="Organic Milk" alt="Preset 3">
-              <img src="../images/bread.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Wheat Bread" alt="Preset 4">
-              <img src="../images/oil.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Honey / Oil" alt="Preset 5">
-              <img src="../images/fruit1.jpeg" class="preset-thumb" onclick="selectPresetImage(this)" title="Oranges" alt="Preset 6">
+            <div style="margin-bottom: 6px;">
+              <label for="productImageUrl" style="font-size: 11px; color: #4b5563; font-weight: 600;">Or Paste Online Image URL:</label>
+              <input type="url" id="productImageUrl" placeholder="https://images.unsplash.com/... (Image URL)" oninput="handleImageUrlInput(this.value)" style="width: 100%; font-size: 12px; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px;" />
+            </div>
+
+            <small style="display: block; margin-bottom: 4px; font-weight: 600; color: #374151;">Or Quick-Pick a Category Preset:</small>
+            <div class="preset-images-picker" style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500&auto=format&fit=crop&q=80" class="preset-thumb active" onclick="selectPresetImage(this)" title="Spinach" alt="Spinach">
+              <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Tomatoes" alt="Tomatoes">
+              <img src="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Broccoli" alt="Broccoli">
+              <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Apples" alt="Apples">
+              <img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Bananas" alt="Bananas">
+              <img src="https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Oranges" alt="Oranges">
+              <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Milk" alt="Milk">
+              <img src="https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Paneer / Cheese" alt="Paneer">
+              <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Bread" alt="Bread">
+              <img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Cookies" alt="Cookies">
+              <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Chips / Snacks" alt="Chips">
+              <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&auto=format&fit=crop&q=80" class="preset-thumb" onclick="selectPresetImage(this)" title="Honey / Oil" alt="Honey">
             </div>
           </div>
         </div>
@@ -228,6 +244,7 @@
     <span id="toastText">Product updated successfully!</span>
   </div>
 
+  <script src="../javascript/api.js"></script>
   <script src="../javascript/main.js"></script>
   <script src="../javascript/admin-products.js"></script>
 </body>

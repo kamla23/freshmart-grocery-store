@@ -18,9 +18,40 @@ const INITIAL_CATALOG = [
   { id: "206", name: "Pure Natural Honey", category: "Organic", price: 220, unit: "500g", stock: 4, threshold: 5, image: "../images/oil.jpeg" }
 ];
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchLiveProducts();
   renderInventoryTable();
 });
+
+async function fetchLiveProducts() {
+  if (window.FreshMartAPI) {
+    try {
+      const res = await FreshMartAPI.get("/products");
+      if (res.success && Array.isArray(res.products)) {
+        const inventory = res.products.map(p => {
+          let imgPath = p.imageUrl || "../images/vagetables.jpeg";
+          if (imgPath.startsWith("/uploads")) {
+            const base = window.FreshMartAPI ? FreshMartAPI.UPLOADS_BASE : "http://localhost:5000/uploads";
+            imgPath = `${base}${imgPath.replace("/uploads", "")}`;
+          }
+          return {
+            id: p._id,
+            name: p.name,
+            category: p.category,
+            price: p.price,
+            unit: p.unit || "500g",
+            stock: p.stock,
+            threshold: p.threshold || 5,
+            image: imgPath
+          };
+        });
+        localStorage.setItem("freshmart_inventory", JSON.stringify(inventory));
+      }
+    } catch (e) {
+      console.warn("Could not fetch products from server:", e);
+    }
+  }
+}
 
 // ================= 1. INVENTORY STORAGE HELPERS ================= //
 function getProductsInventory() {
@@ -162,13 +193,21 @@ function handleFilterProducts() {
 }
 
 // ================= 3. QUICK RESTOCK ================= //
-function handleQuickRestock(productId) {
+async function handleQuickRestock(productId) {
   let inventory = getProductsInventory();
   const item = inventory.find(i => String(i.id) === String(productId));
   if (item) {
     item.stock = (Number(item.stock) || 0) + 10;
     saveProductsInventory(inventory);
     showAdminToast(`Restocked +10 units of ${item.name}!`);
+
+    if (window.FreshMartAPI && String(productId).length === 24) {
+      try {
+        await FreshMartAPI.patch(`/products/${productId}/restock`, {}, true, true);
+      } catch (e) {
+        console.warn("API restock error:", e);
+      }
+    }
   }
 }
 
@@ -183,7 +222,11 @@ function openAddProductModal() {
   if (form) form.reset();
   if (editIdInput) editIdInput.value = "";
   if (title) title.textContent = "Add New Grocery Product";
-  if (preview) preview.src = "../images/vagetables.jpeg";
+  const defaultImg = "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500&auto=format&fit=crop&q=80";
+  if (preview) preview.src = defaultImg;
+
+  const urlInput = document.getElementById("productImageUrl");
+  if (urlInput) urlInput.value = "";
 
   // Reset preset active border
   document.querySelectorAll(".preset-thumb").forEach((t, i) => {
@@ -202,6 +245,7 @@ function openEditProductModal(productId) {
   const title = document.getElementById("productModalTitle");
   const editIdInput = document.getElementById("editProductId");
   const preview = document.getElementById("imagePreview");
+  const urlInput = document.getElementById("productImageUrl");
 
   if (title) title.textContent = `Edit Product: ${item.name}`;
   if (editIdInput) editIdInput.value = item.id;
@@ -213,11 +257,13 @@ function openEditProductModal(productId) {
   document.getElementById("prodStock").value = item.stock || 0;
   document.getElementById("prodThreshold").value = item.threshold || 5;
 
-  if (preview) preview.src = item.image || "../images/vagetables.jpeg";
+  const itemImg = item.image || "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=500&auto=format&fit=crop&q=80";
+  if (preview) preview.src = itemImg;
+  if (urlInput) urlInput.value = itemImg.startsWith("http") ? itemImg : "";
 
   // Highlight preset if matches
   document.querySelectorAll(".preset-thumb").forEach(t => {
-    t.classList.toggle("active", t.getAttribute("src") === item.image);
+    t.classList.toggle("active", t.getAttribute("src") === itemImg);
   });
 
   if (modal) modal.style.display = "flex";
@@ -226,6 +272,17 @@ function openEditProductModal(productId) {
 function closeProductModal() {
   const modal = document.getElementById("productModal");
   if (modal) modal.style.display = "none";
+}
+
+// Online Image URL input handler
+function handleImageUrlInput(url) {
+  const preview = document.getElementById("imagePreview");
+  if (preview && url && (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("../"))) {
+    preview.src = url;
+    document.querySelectorAll(".preset-thumb").forEach(t => t.classList.remove("active"));
+    const fileInput = document.getElementById("productImageFile");
+    if (fileInput) fileInput.value = "";
+  }
 }
 
 // Multer-Ready Image Upload Reader (FileReader converts file to DataURL)
@@ -245,8 +302,10 @@ function handleImageFileUpload(event) {
     if (preview) {
       preview.src = e.target.result;
     }
-    // Deselect preset buttons
+    // Deselect preset buttons & clear URL input
     document.querySelectorAll(".preset-thumb").forEach(t => t.classList.remove("active"));
+    const urlInput = document.getElementById("productImageUrl");
+    if (urlInput) urlInput.value = "";
   };
   reader.readAsDataURL(file);
 }
@@ -256,9 +315,13 @@ function selectPresetImage(thumbEl) {
   thumbEl.classList.add("active");
 
   const preview = document.getElementById("imagePreview");
+  const src = thumbEl.getAttribute("src");
   if (preview) {
-    preview.src = thumbEl.getAttribute("src");
+    preview.src = src;
   }
+
+  const urlInput = document.getElementById("productImageUrl");
+  if (urlInput) urlInput.value = src.startsWith("http") ? src : "";
 
   // Clear file input
   const fileInput = document.getElementById("productImageFile");
@@ -266,7 +329,7 @@ function selectPresetImage(thumbEl) {
 }
 
 // Save Product (Add or Edit)
-function handleSaveProduct(event) {
+async function handleSaveProduct(event) {
   event.preventDefault();
 
   const editId = document.getElementById("editProductId").value.trim();
@@ -276,11 +339,49 @@ function handleSaveProduct(event) {
   const price = parseFloat(document.getElementById("prodPrice").value) || 0;
   const stock = parseInt(document.getElementById("prodStock").value) || 0;
   const threshold = parseInt(document.getElementById("prodThreshold").value) || 5;
+  const fileInput = document.getElementById("productImageFile");
   const image = document.getElementById("imagePreview")?.getAttribute("src") || "../images/vagetables.jpeg";
 
   if (!name || price <= 0) {
     alert("Please enter a valid product name and price.");
     return;
+  }
+
+  // 1. Live Save to MongoDB Atlas / Multer upload
+  if (window.FreshMartAPI) {
+    try {
+      if (editId && editId.length === 24) {
+        // Edit existing product in MongoDB
+        await FreshMartAPI.put(`/products/${editId}`, {
+          name, category, unit, price, stock, threshold, imageUrl: image
+        }, true, true);
+      } else if (!editId) {
+        // Add new product with Multer image upload
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          const fd = new FormData();
+          fd.append("name", name);
+          fd.append("category", category);
+          fd.append("unit", unit);
+          fd.append("price", price);
+          fd.append("stock", stock);
+          fd.append("threshold", threshold);
+          fd.append("image", fileInput.files[0]);
+          await FreshMartAPI.post("/products", fd, true, true);
+        } else {
+          await FreshMartAPI.post("/products", {
+            name, category, unit, price, stock, threshold, imageUrl: image
+          }, true, true);
+        }
+      }
+      // Re-fetch clean list from MongoDB Atlas
+      await fetchLiveProducts();
+      renderInventoryTable();
+      showAdminToast(editId ? `Updated "${name}" successfully!` : `Added "${name}" to product catalog!`);
+      closeProductModal();
+      return;
+    } catch (err) {
+      console.warn("Could not save to API, falling back to local:", err);
+    }
   }
 
   let inventory = getProductsInventory();
@@ -323,13 +424,21 @@ function handleSaveProduct(event) {
 }
 
 // ================= 5. DELETE PRODUCT ================= //
-function handleDeleteProduct(productId) {
+async function handleDeleteProduct(productId) {
   let inventory = getProductsInventory();
   const item = inventory.find(i => String(i.id) === String(productId));
   const itemName = item ? item.name : "this item";
 
   if (!confirm(`Are you sure you want to delete "${itemName}" from the inventory?`)) {
     return;
+  }
+
+  if (window.FreshMartAPI && String(productId).length === 24) {
+    try {
+      await FreshMartAPI.delete(`/products/${productId}`, true, true);
+    } catch (e) {
+      console.warn("Delete API error:", e);
+    }
   }
 
   inventory = inventory.filter(i => String(i.id) !== String(productId));
